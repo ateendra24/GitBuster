@@ -6,7 +6,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Toaster } from "@/components/ui/sonner"
 import siteConfig from "@/config/siteConfig";
-import Navbar from "@/components/General/Navbar";
+import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: `${siteConfig.siteName} beta - GitHub Code Analyzer`,

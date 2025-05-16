@@ -9,7 +9,7 @@ const fadeInVariants = {
     exit: { opacity: 0, transition: { duration: 0.3 } },
 };
 
-function PageWrapper({ children, className }: { children?: ReactNode, className?: string }) {
+function ChatPageWrapper({ children, className }: { children?: ReactNode, className?: string }) {
     return (
         <>
             <motion.div
@@ -18,13 +18,12 @@ function PageWrapper({ children, className }: { children?: ReactNode, className?
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className={`flex-1 flex flex-col items-center justify-center mt-22 w-full max-w-4xl mx-auto px-6 py-12 ${className}`}
+                className={`flex-1 flex flex-col items-center justify-center w-full h-[100dvh] max-w-6xl mx-auto px-4 py-8 ${className}`}
             >
                 {children}
             </motion.div>
-            <Footer />
         </>
     );
 }
 
-export default PageWrapper;
+export default ChatPageWrapper;
