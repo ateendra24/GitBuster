@@ -7,7 +7,7 @@ import ChatPageWrapper from '@/components/wrappers/ChatPageWrapper';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fadeInVariants } from '@/lib/animations';
 import { Info } from 'lucide-react';
-import { Circle } from '../../../public/Circle';
+import { Circle } from '../../components/icons/Circle';
 import RepoAnalysis from './(interface)';
 
 function index({ username, repo }: { username: String, repo: String }) {

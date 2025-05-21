@@ -1,6 +1,5 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text'
 import siteConfig from '@/config/siteConfig'
 
 function index() {
@@ -9,21 +8,21 @@ function index() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="space-y-10"
+            className="relative min-h-[66vh] flex items-center justify-center overflow-hidden"
         >
-            <div>
-                <div className="py-40 text-center text-white space-y-6 max-w-3xl mx-auto">
-                    <AnimatedShinyText className="text-4xl md:text-6xl font-extrabold">
-                        Understand Code Instantly
-                    </AnimatedShinyText>
-                    <br /><br />
-                    <p className="text-base md:text-lg text-muted-foreground">
-                        {siteConfig.siteName}{' '}
-                        helps developers explore and understand repositories with AI-powered insights and visual clarity.
-                    </p>
-                </div>
+
+            {/* Content */}
+            <div className="relative z-10 py-16 md:py-20 text-center text-white space-y-8 max-w-4xl mx-auto px-4 md:px-6">
+                <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+                    {siteConfig.siteName}
+                </h1>
+                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Building the future of code understanding and analysis through artificial intelligence.
+                </p>
             </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
         </motion.section>
     )
 }

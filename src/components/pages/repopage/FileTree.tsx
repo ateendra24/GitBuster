@@ -105,16 +105,17 @@ function FileTree({ URL }: { URL: string }) {
         );
 
     if (error) return <div>Error: {error}</div>;
-    if (!elements) return
-    <div className="relative flex h-[400px] w-full flex-col items-start justify-start overflow-hidden rounded-lg border bg-background p-2">
-        <Loader2 className="animate-spin" />
-    </div>;
+    if (!elements) return (
+        <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background p-2">
+            <Loader2 className="animate-spin" />
+        </div>
+    );
 
     return (
-        <div className="relative flex h-auto w-full md:w-1/2 flex-col items-start justify-start overflow-hidden rounded-lg border bg-background p-4">
+        <div className="relative flex h-[500px] w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
             <Tree
                 className="w-full h-full overflow-auto"
-                initialExpandedItems={folderIds} // Pass all folder IDs here
+                initialExpandedItems={folderIds}
             >
                 {renderTree(elements)}
             </Tree>

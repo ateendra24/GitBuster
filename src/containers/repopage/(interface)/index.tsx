@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import SummaryInterface from './(SummaryInterfce)/SummaryInterface';
 import MessageWrapper from '@/components/wrappers/MessageWrapper';
-import { Copy } from 'lucide-react';
+import { ArrowUp, Copy } from 'lucide-react';
 import { toast } from "sonner"
-import { isValidElement, ReactNode } from 'react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
-import SummaryInterface from '@/components/pages/repopage/SummaryInterface';
+import CodeBlock from '@/components/pages/repopage/CodeBlock';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import FileTree from '@/components/pages/repopage/FileTree';
 
 // Define the message structure
 type Message = {
@@ -25,10 +25,10 @@ type ChatInterfaceProps = {
 };
 
 const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [activeTab, setActiveTab] = useState('chat');
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
     const [scrollTrigger, setScrollTrigger] = useState<'top' | 'bottom' | null>(null);
@@ -83,19 +83,22 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
         }
     }, [activeTab]);
 
+
     useEffect(() => {
         const container = chatContainerRef.current;
         if (!container) return;
 
         const handleScroll = () => {
-            const threshold = 120; // pixels from bottom to trigger hiding the button
-            const isAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+            const threshold = 120;
+            const isAtBottom =
+                container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
             setShowScrollToBottom(!isAtBottom);
         };
 
-        container.addEventListener('scroll', handleScroll);
-        return () => container.removeEventListener('scroll', handleScroll);
+        container.addEventListener("scroll", handleScroll);
+        return () => container.removeEventListener("scroll", handleScroll);
     }, [messages]);
+
 
     const sendMessage = async (messageText: string) => {
         if (!messageText.trim() || isLoading) return;
@@ -129,8 +132,6 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
 
             setMessages((prev) => [...prev, aiMessage]);
         } catch (error) {
-            // console.log("error", error?.response?.data);
-
             console.error('Error sending message:', error);
             const errorMessage: Message = {
                 id: Date.now(),
@@ -152,190 +153,116 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
     };
 
 
-    function extractTextFromChildren(children: ReactNode): string {
-        return React.Children.toArray(children)
-            .map(child => {
-                if (typeof child === 'string') {
-                    return child;
-                }
-
-                if (isValidElement(child)) {
-                    const element = child as React.ReactElement<{ children?: ReactNode }>;
-                    return extractTextFromChildren(element.props.children);
-                }
-
-                return '';
-            })
-            .join('')
-            .trim();
-    }
-
-
-
     return (
-        <>
-            <Tabs defaultValue="chat" onValueChange={setActiveTab} className="w-full max-w-6xl mx-auto pt-16 h-[calc(100vh-4rem)] flex flex-col">
-
-                <TabsList className="w-full">
-                    <TabsTrigger value="chat">Chat</TabsTrigger>
-                    <TabsTrigger value="summary">Summary</TabsTrigger>
-                </TabsList>
-
-                <div className="flex flex-col h-full CustomCardHeight shadow-lg overflow-hidden border rounded-xl">
-                    <TabsContent value="chat" className="flex-1 overflow-hidden">
-                        <Card className="flex relative flex-col w-full dark:bg-[#2a2a2a] gap-0 p-0 h-full">
-                            <CardHeader className="p-4 ">
-                                <h2 className="text-base md:text-lg font-semibold line-clamp-2">Chat with Repository : {url}</h2>
-                            </CardHeader>
-
-                            <CardContent ref={chatContainerRef}
-                                className="flex-1 overflow-y-auto scrollbar-thin p-4 bg-gray-50 dark:bg-[#252525]">
-                                <div className="space-y-4">
-                                    {messages.length === 0 ? (
-                                        <div className="text-center text-gray-500 dark:text-gray-400 my-8">
-                                            <p>Ask questions about the repository.</p>
-                                            <p className="mt-2 text-sm">
-                                                Try: "What's the main functionality of this repo?" or "How is the code organized?"
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        messages.map((message) => (
-                                            <div
-                                                key={message.id}
-                                                className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'}`}
-                                            >
-                                                <div
-                                                    className={`max-w-[80%] rounded-lg px-4 py-2 ${message.sender === 'human'
-                                                        ? 'bg-background rounded-full'
-                                                        : ''
-                                                        }`}
+        <div className='mt-0 max-w-4xl mx-auto px-2'>
+            <div className=''>
+                <div ref={chatContainerRef} className="h-full py-24 max-h-[85dvh] overflow-y-auto space-y-4 px-2">
+                    {messages.length === 0 ? (
+                        <div className="text-center text-gray-500 dark:text-gray-400 my-8">
+                            <p>Ask questions about the repository.</p>
+                            <p className="mt-2 text-sm">
+                                Try: "What's the main functionality of this repo?" or "How is the code organized?"
+                            </p>
+                        </div>
+                    ) : (
+                        messages.map((message) => (
+                            <div key={message.id} className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}>
+                                <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
+                                    {message.sender === 'ai' ? (
+                                        <MessageWrapper>
+                                            <div className="AI-message text-sm md:text-base space-y-6">
+                                                <ReactMarkdown
+                                                    className='AI-message text-sm md:text-base space-y-6'
+                                                    components={{
+                                                        code({ node, inline, className, children, ...props }) {
+                                                            const match = /language-(\w+)/.exec(className || "");
+                                                            return !inline && match ? (
+                                                                <CodeBlock
+                                                                    language={match[1]}
+                                                                    value={String(children).trim()}
+                                                                />
+                                                            ) : (
+                                                                <code className={className} {...props}>
+                                                                    {children}
+                                                                </code>
+                                                            );
+                                                        },
+                                                    }}
                                                 >
-                                                    {message.sender === 'ai' ? (
-                                                        <MessageWrapper>
-                                                            <div className="AI-message text-sm md:text-base space-y-6">
-                                                                <ReactMarkdown
-                                                                    className='AI-message text-sm md:text-base space-y-6'
-                                                                    components={{
-                                                                        p: ({ node, children }) => {
-                                                                            const text = extractTextFromChildren(children);
-
-                                                                            const prefixes = ["bash", "javascript", "js", "python", "html", "css", "json", "xml", "java", "csharp", "php", "ruby", "go", "swift"];
-
-                                                                            let detectedPrefix: string | null = null;
-                                                                            let cleanedText = text;
-
-                                                                            for (const prefix of prefixes) {
-                                                                                if (text.toLowerCase().startsWith(prefix)) {
-                                                                                    detectedPrefix = prefix;
-                                                                                    cleanedText = text.slice(prefix.length).trim();
-                                                                                    break;
-                                                                                }
-                                                                            }
-
-                                                                            return (
-                                                                                <>
-                                                                                    {detectedPrefix ? (
-                                                                                        <div className='code-block relative'>
-                                                                                            <span className='text-xs bg-muted px-2 py-1 rounded absolute top-1 left-2 capitalize text-muted-foreground'>
-                                                                                                {detectedPrefix}
-                                                                                            </span>
-                                                                                            <p className='pt-6'>{cleanedText}</p>
-                                                                                            <Button
-                                                                                                variant={'ghost'}
-                                                                                                className='h-8 w-8 p-3 rounded-md absolute top-2 right-2 cursor-pointer dark:hover:bg-[var(--color-neutral-800)]'
-                                                                                                onClick={() => {
-                                                                                                    navigator.clipboard.writeText(cleanedText);
-                                                                                                    toast("Code copied to clipboard!")
-                                                                                                }}
-                                                                                            >
-                                                                                                <Copy size={10} />
-                                                                                            </Button>
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <p>{text}</p>
-                                                                                    )}
-                                                                                </>
-                                                                            );
-                                                                        },
-                                                                        a: ({ node, children, ...props }) => {
-                                                                            return (
-                                                                                <a {...props} className='underline'>
-                                                                                    {children}
-                                                                                </a>
-                                                                            );
-                                                                        },
+                                                    {message.text}
+                                                </ReactMarkdown>
 
 
-                                                                    }}
-                                                                >
-                                                                    {message.text}
-                                                                </ReactMarkdown>
 
-                                                            </div>
-                                                        </MessageWrapper>
-                                                    ) : (
-                                                        <p>{message.text}</p>
-                                                    )}
-                                                </div>
                                             </div>
-                                        ))
+                                        </MessageWrapper>
+
+                                    ) : (
+                                        <p className='px-3'>{message.text}</p>
+
                                     )}
-                                    {isLoading && (
-                                        <div className="pl-4">
-                                            <AnimatedShinyText>Thinking Response...</AnimatedShinyText>
-                                        </div>
-                                    )}
-                                    {/* <div ref={messagesEndRef} /> */}
                                 </div>
+                            </div>
+                        ))
 
-                            </CardContent>
-
-                            {showScrollToBottom && (
-                                <MessageWrapper>
-                                    <div className="absolute right-6 bottom-32 z-10">
-                                        <Button
-                                            size="sm"
-                                            className="rounded-full shadow hover:bg-primary/90 transition-all duration-500 cursor-pointer"
-                                            onClick={() => {
-                                                scrollToBottomSmooth();
-                                                setShowScrollToBottom(false);
-                                            }}
-                                        >
-                                            ↓
-                                        </Button>
-                                    </div>
-                                </MessageWrapper>
-                            )}
-                            <QuickActions sendMessage={sendMessage} isLoading={isLoading} />
-
-                            <CardFooter className="bg-white dark:bg-[#2a2a2a] border p-3 flex flex-col ">
-                                <form onSubmit={handleSendMessage} className="flex space-x-2 w-full">
-                                    <Input
-                                        type="text"
-                                        value={input}
-                                        onChange={(e: ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
-                                        placeholder="Ask about the repository..."
-                                        className="flex-1"
-                                        disabled={isLoading}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        className={`px-6 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                                        disabled={isLoading}
-                                    >
-                                        Send
-                                    </Button>
-                                </form>
-                            </CardFooter>
-                        </Card>
-                    </TabsContent>
-
-                    <TabsContent value="summary" className="flex-1 overflow-hidden border rounded-lg">
-                        <SummaryInterface url={url} />
-                    </TabsContent>
+                    )}
+                    {
+                        isLoading && (
+                            <div className='mb-32'>
+                                <AnimatedShinyText>Thinking Response...</AnimatedShinyText>
+                            </div>
+                        )
+                    }
                 </div>
-            </Tabs>
-        </>
+
+                {
+                    showScrollToBottom && (
+                        <MessageWrapper>
+                            <div className="absolute left-1/2 translate-x-[-50%] bottom-36 z-50">
+                                <Button
+                                    size="sm"
+                                    className="rounded-full shadow-lg hover:bg-primary/90 transition-all duration-500 cursor-pointer"
+                                    onClick={() => {
+                                        scrollToBottomSmooth();
+                                    }}
+                                >
+                                    ↓
+                                </Button>
+                            </div>
+                        </MessageWrapper>
+                    )
+                }
+
+            </div >
+
+            <div className='fixed z-[9] w-full bottom-0 h-16 left-1/2 translate-x-[-50%] bg-background'>
+
+            </div>
+
+            <div className='fixed z-10 bottom-3 left-1/2 translate-x-[-50%] w-[90%] max-w-4xl'>
+
+                <form onSubmit={handleSendMessage}>
+                    <Textarea
+                        value={input}
+                        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+                        placeholder="Ask about the repository..."
+                        className='w-full min-h-10 h-full max-h-40 bg-white dark:bg-[#2f2f2f] border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
+                        disabled={isLoading}
+                    />
+                    <Button
+                        type="submit"
+                        className="w-fit absolute bottom-15 right-2 rounded-full cursor-pointer"
+                        disabled={isLoading || input.length === 0}
+                    >
+                        <ArrowUp size={1} />
+                    </Button>
+                    <QuickActions url={url} sendMessage={sendMessage} isLoading={isLoading} />
+
+                </form>
+
+
+            </div>
+        </div >
     );
 };
 

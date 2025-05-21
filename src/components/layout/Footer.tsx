@@ -1,9 +1,8 @@
 import React from 'react'
-import { Circle } from '../../../public/Circle'
+import { Circle } from '../icons/Circle'
 import Link from 'next/link'
 import siteConfig from '@/config/siteConfig'
 import Image from 'next/image'
-import X from '../icons/X'
 
 function Footer({ className }: { className?: String }) {
     return (
@@ -40,7 +39,7 @@ function Footer({ className }: { className?: String }) {
                 height={50}
                 alt=''
                 src='/mesh.png'
-                className='absolute bottom-0 left-0 right-0 mx-auto w-[1200px] h-[120px] lg:h-[160px] object-cover -z-10'
+                className='absolute bottom-0 left-0 right-0 mx-auto w-[1100px] h-[100px] lg:h-[120px] object-cover -z-10'
             />
 
         </footer>

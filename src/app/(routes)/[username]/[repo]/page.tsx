@@ -6,8 +6,8 @@ type Params = {
     repo: string;
 };
 
-function page({ params }: { params: Params }) {
-    const { username, repo } = params;
+async function page({ params }: { params: Params }) {
+    const { username, repo } = await params;
 
     return (
         <ChatPageWrapper>

@@ -29,7 +29,7 @@ export default function index({ }: MainProps) {
                         src="/mesh.png"
                         width={100}
                         height={50}
-                        className="fixed bottom-0 mx-auto w-[1300px] aspect-auto h-[180px] object-cover -z-10"
+                        className="fixed bottom-0 mx-auto w-[1000px] aspect-auto h-[100px] object-cover -z-10"
                     />
                 </motion.div>
             </div>
