@@ -1,20 +1,23 @@
 "use client"
 import axios from 'axios';
-import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner';
-import ChatPageWrapper from '@/components/wrappers/ChatPageWrapper';
-import { AnimatePresence, motion } from 'framer-motion';
-import { fadeInVariants } from '@/lib/animations';
+import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { Circle } from '../../components/icons/Circle';
 import RepoAnalysis from './(interface)';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { fadeInVariants } from '@/lib/animations';
+import FileTree from '@/components/pages/repopage/FileTree';
+import { AppSidebar } from '@/components/app-sidebar';
+import Details from '@/components/pages/repopage/Details';
 
-function index({ username, repo }: { username: String, repo: String }) {
-    const url = `https://github.com/${username}/${repo}`
+function Index({ username, repo }: { username: string, repo: string }) {
+    const url = `https://github.com/${username}/${repo}`;
     const [loading, setLoading] = useState(true);
-    const [processed, setProcessed] = useState(false)
+    const [processed, setProcessed] = useState(false);
     const [error, setError] = useState('');
+    const [activeView, setActiveView] = useState<'chat' | 'folder' | 'details'>('chat');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,7 +30,6 @@ function index({ username, repo }: { username: String, repo: String }) {
                 console.error('Error processing repository:', error);
                 toast.error(error?.response?.data?.message || 'Error processing repository');
                 setError(error?.response?.data?.message || 'Error processing repository');
-
             } finally {
                 setLoading(false);
             }
@@ -36,9 +38,8 @@ function index({ username, repo }: { username: String, repo: String }) {
         fetchData();
     }, []);
 
-
-    if (loading) return (
-        <>
+    if (loading) {
+        return (
             <motion.div
                 key="loading"
                 variants={fadeInVariants}
@@ -47,30 +48,44 @@ function index({ username, repo }: { username: String, repo: String }) {
                 exit="exit"
                 className="flex flex-col items-center justify-center h-full space-y-4"
             >
-                {/* <Loader2 className='animate-spin h-12 w-12 text-blue-500' /> */}
-                <Circle className={"animate-spin"} />
+                <Circle className="animate-spin" />
                 <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300">
                     We are currently processing your Repo. Please wait...
                 </h2>
             </motion.div>
-        </>
-    )
+        );
+    }
 
-    if (processed) return (
-        <>
+    if (processed) {
+        return (
             <motion.div
-                key="chat"
+                key="main"
                 variants={fadeInVariants}
                 initial="initial"
                 animate="animate"
                 exit="exit"
                 className="h-full w-full"
             >
-                <RepoAnalysis url={url} />
-            </motion.div>
+                <SidebarProvider className="h-full w-full">
+                    <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
+                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 py-8">
+                        <SidebarTrigger className="absolute top-16 left-1 z-20" />
 
-        </>
-    )
+                        <div className={`h-full w-full ${activeView === 'chat' ? 'block' : 'hidden'}`}>
+                            <RepoAnalysis url={url} />
+                        </div>
+                        <div className={`h-full w-full md:p-2 ${activeView === 'folder' ? 'block' : 'hidden'} `}>
+                            <FileTree URL={url} />
+                        </div>
+                        <div className={`h-full w-full md:p-2 ${activeView === 'details' ? 'block' : 'hidden'} `}>
+                            <Details URL={url} />
+                        </div>
+
+                    </div>
+                </SidebarProvider>
+            </motion.div>
+        );
+    }
 
     return (
         <motion.div
@@ -86,7 +101,10 @@ function index({ username, repo }: { username: String, repo: String }) {
                 {error}
             </p>
         </motion.div>
-    )
+    );
 }
 
-export default index
+export default Index;
+
+
+

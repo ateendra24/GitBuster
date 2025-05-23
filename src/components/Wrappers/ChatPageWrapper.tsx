@@ -2,6 +2,8 @@
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import Footer from '../layout/Footer';
+import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
+// import { AppSidebar } from '../app-sidebar';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -12,16 +14,19 @@ const fadeInVariants = {
 function ChatPageWrapper({ children, className }: { children?: ReactNode, className?: string }) {
     return (
         <>
+
             <motion.div
                 key="input"
                 variants={fadeInVariants}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className={`flex-1 flex flex-col items-center justify-center w-full h-[100dvh] max-w-6xl mx-auto px-4 py-8 ${className}`}
+                className={`flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto`}
             >
+
                 {children}
             </motion.div>
+
         </>
     );
 }

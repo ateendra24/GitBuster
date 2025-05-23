@@ -154,8 +154,8 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
 
 
     return (
-        <div className='mt-0 max-w-4xl mx-auto px-2'>
-            <div className=''>
+        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
+            <div>
                 <div ref={chatContainerRef} className="h-full py-24 max-h-[85dvh] overflow-y-auto space-y-4 px-2">
                     {messages.length === 0 ? (
                         <div className="text-center text-gray-500 dark:text-gray-400 my-8">
@@ -235,11 +235,10 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
 
             </div >
 
-            <div className='fixed z-[9] w-full bottom-0 h-16 left-1/2 translate-x-[-50%] bg-background'>
+            <div className='absolute z-[9] w-full bottom-0 h-20 left-1/2 translate-x-[-50%] bg-background' />
 
-            </div>
 
-            <div className='fixed z-10 bottom-3 left-1/2 translate-x-[-50%] w-[90%] max-w-4xl'>
+            <div className='absolute z-10 bottom-0 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl'>
 
                 <form onSubmit={handleSendMessage}>
                     <Textarea
@@ -251,7 +250,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                     />
                     <Button
                         type="submit"
-                        className="w-fit absolute bottom-15 right-2 rounded-full cursor-pointer"
+                        className="w-fit absolute bottom-14 right-2 rounded-full cursor-pointer"
                         disabled={isLoading || input.length === 0}
                     >
                         <ArrowUp size={1} />

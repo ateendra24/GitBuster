@@ -104,17 +104,19 @@ function FileTree({ URL }: { URL: string }) {
             )
         );
 
-    if (error) return <div>Error: {error}</div>;
+    if (error) return <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">Error: {error}</div>;
     if (!elements) return (
-        <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-background p-2">
+        <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
             <Loader2 className="animate-spin" />
         </div>
     );
 
     return (
-        <div className="relative flex h-[500px] w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
+        <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
+
+            <p className="text-xl font-semibold mb-6">Repo File Tree</p>
             <Tree
-                className="w-full h-full overflow-auto"
+                className="w-full h-full overflow-auto p-0"
                 initialExpandedItems={folderIds}
             >
                 {renderTree(elements)}

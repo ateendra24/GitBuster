@@ -63,7 +63,7 @@ function index() {
             </div>
 
             <div className="relative w-full max-w-3xl mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg z-10 pointer-events-none"></div>
+                <div className="hidden dark:block absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg z-10 pointer-events-none"></div>
 
                 <Image
                     width={500}

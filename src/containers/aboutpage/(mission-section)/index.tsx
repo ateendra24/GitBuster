@@ -46,7 +46,7 @@ function index() {
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.1 }}
                         >
-                            <Card className="bg-background/60 border-muted backdrop-blur shadow-md hover:shadow-xl transition">
+                            <Card className="bg-background/60 h-full border-muted backdrop-blur shadow-md hover:shadow-xl transition">
                                 <CardContent className="p-6 space-y-4">
                                     <div className="text-4xl">{point.icon}</div>
                                     <h4 className="text-xl font-semibold">{point.title}</h4>

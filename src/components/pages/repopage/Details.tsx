@@ -59,17 +59,17 @@ function Details({ URL }: { URL: string }) {
         fetchRepoDetails();
     }, [URL]);
 
-    if (error) return <div >{error}</div>;
+    if (error) return <div className="w-full h-full overflow-y-auto p-8 shadow-none bg-transparent">{error}</div>;
     if (loading) return
-    <div className="relative flex h-[400px] w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background p-2">
+    <div className="relative flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg p-2">
         <Loader2 className="animate-spin" />
     </div>;
 
     if (repoDetails)
         return (
-            <Card className="w-full shadow-md bg-background rounded-lg overflow-y-auto">
+            <Card className="w-full h-full overflow-y-auto p-8 shadow-none bg-transparent">
                 <CardHeader className="flex items-center px-0">
-                    <p className="text-xl font-semibold">{repoDetails.name}</p>
+                    <p className="text-xl font-semibold">Repo Details</p>
                 </CardHeader>
                 <CardContent className="space-y-4 px-0">
                     <div>
@@ -101,7 +101,7 @@ function Details({ URL }: { URL: string }) {
                         <p className="text-muted-foreground line-clamp-3">{repoDetails.forks_count}</p>
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-between items-center">
+                <CardFooter className="p-0">
                     <Button variant="outline" >
                         <a href={repoDetails.html_url} target="_blank">View Repo</a>
                     </Button>

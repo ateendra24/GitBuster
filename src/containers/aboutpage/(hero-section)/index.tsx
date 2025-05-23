@@ -12,8 +12,8 @@ function index() {
         >
 
             {/* Content */}
-            <div className="relative z-10 py-16 md:py-20 text-center text-white space-y-8 max-w-4xl mx-auto px-4 md:px-6">
-                <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+            <div className="relative z-10 py-16 md:py-20 text-center space-y-8 max-w-4xl mx-auto px-4 md:px-6">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                     {siteConfig.siteName}
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">

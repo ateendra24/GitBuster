@@ -33,6 +33,7 @@ function index() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
             className="py-20 md:py-32 space-y-12 px-4 md:px-6"
         >
             <div className="text-center space-y-8 max-w-3xl mx-auto">
