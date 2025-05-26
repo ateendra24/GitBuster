@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-// import { GithubIcon } from "@heroicons/react/outline"; // You can customize this or use a custom icon
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Calendar, Eye, File, GitFork, Loader2, Star, Text, User } from "lucide-react";
+import { Calendar, Eye, File, GitFork, Link, Loader2, Star, Text, User } from "lucide-react";
 
 type RepoDetails = {
     name: string;
@@ -15,6 +14,7 @@ type RepoDetails = {
     html_url: string;
     watchers_count: number;
     forks_count: number;
+    homepage: string;
 };
 
 function Details({ URL }: { URL: string }) {
@@ -45,6 +45,7 @@ function Details({ URL }: { URL: string }) {
                     html_url: data.html_url,
                     watchers_count: data.watchers_count,
                     forks_count: data.forks_count,
+                    homepage: data.homepage
                 };
 
                 setRepoDetails(repoData);
@@ -100,6 +101,14 @@ function Details({ URL }: { URL: string }) {
                         <Label className="text-base"><GitFork size={18} /> Fork Count</Label>
                         <p className="text-muted-foreground line-clamp-3">{repoDetails.forks_count}</p>
                     </div>
+                    {
+                        repoDetails.homepage && (
+                            <div>
+                                <Label className="text-base"><Link size={18} /> Link</Label>
+                                <p className="text-muted-foreground">{repoDetails.homepage}</p>
+                            </div>
+                        )
+                    }
                 </CardContent>
                 <CardFooter className="p-0">
                     <Button variant="outline" >

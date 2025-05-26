@@ -2,13 +2,16 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { fadeInVariants } from '@/lib/animations';
 import HeroSection from './(hero-section)';
 import InputSection from './(input-section)';
 
-interface MainProps { }
+const fadeInVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.3 } },
+};
 
-export default function index({ }: MainProps) {
+export default function index() {
 
     return (
         <div className="min-h-[100dvh] transition-colors duration-500">

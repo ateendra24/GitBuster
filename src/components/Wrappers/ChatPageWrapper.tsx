@@ -1,9 +1,6 @@
 "use client"
 import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import Footer from '../layout/Footer';
-import { SidebarProvider, SidebarTrigger } from '../ui/sidebar';
-// import { AppSidebar } from '../app-sidebar';
 
 const fadeInVariants = {
     initial: { opacity: 0 },

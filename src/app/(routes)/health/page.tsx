@@ -41,7 +41,7 @@ function page() {
 
     return (
         <PageWrapper>
-            <div className='flex flex-col gap-4 items-center justify-center min-h-[600px]'>
+            <div className='flex flex-col gap-4 items-center justify-center'>
                 <h1 className='text-2xl font-bold text-center'>Health Check for {siteConfig.siteName} Backend</h1>
                 {loading && <p className='text-lg flex items-center gap-3 animate-pulse'> Checking... </p>}
                 {status && <p className='text-green-500 text-lg flex items-center gap-3'><CircleCheck /> {status}</p>}

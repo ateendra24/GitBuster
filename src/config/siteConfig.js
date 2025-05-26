@@ -1,6 +1,6 @@
 const siteConfig = {
     siteName: "RepoAI",
-    siteUrl: "https://www.myawesomewebsite.com",
+    siteUrl: "",
     tagline: "GitHub Code Analyzer",
     description: "Analyze any GitHub repository with AI. Input a repository URL, and chat with an AI assistant about the codebase.",
     author: {
@@ -14,7 +14,7 @@ const siteConfig = {
         contact: "https://forms.gle/c97P7ov41tSL9nom8",
         instagram: "https://www.instagram.com/",
     },
-    contactEmail: "contact@myawesomewebsite.com",
+    contactEmail: "",
 };
 
 export default siteConfig;

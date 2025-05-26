@@ -18,7 +18,7 @@ function PageWrapper({ children, className }: { children?: ReactNode, className?
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className={`flex-1 flex flex-col items-center justify-center mt-22 w-full max-w-4xl mx-auto px-6 py-12 ${className}`}
+                className={`flex-1 flex flex-col items-center justify-center mt-24 w-full max-w-4xl mx-auto px-6 mb-14 min-h-[calc(100dvh-88px)] ${className}`}
             >
                 {children}
             </motion.div>

@@ -7,10 +7,15 @@ import { Info } from 'lucide-react';
 import { Circle } from '../../components/icons/Circle';
 import RepoAnalysis from './(interface)';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { fadeInVariants } from '@/lib/animations';
 import FileTree from '@/components/pages/repopage/FileTree';
 import { AppSidebar } from '@/components/app-sidebar';
 import Details from '@/components/pages/repopage/Details';
+
+const fadeInVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.3 } },
+};
 
 function Index({ username, repo }: { username: string, repo: string }) {
     const url = `https://github.com/${username}/${repo}`;
@@ -22,7 +27,16 @@ function Index({ username, repo }: { username: string, repo: string }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post('/api/process-repo', { url });
+                const response = await axios.post(
+                    `/api/process-repo`,
+                    { url },
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
                 if (response.status === 200) {
                     setProcessed(true);
                 }
@@ -38,6 +52,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
         fetchData();
     }, []);
 
+
     if (loading) {
         return (
             <motion.div
@@ -49,7 +64,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
                 className="flex flex-col items-center justify-center h-full space-y-4"
             >
                 <Circle className="animate-spin" />
-                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300">
+                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 text-center">
                     We are currently processing your Repo. Please wait...
                 </h2>
             </motion.div>
@@ -97,7 +112,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             className="flex flex-col items-center justify-center h-full space-y-4"
         >
             <Info className="h-12 w-12 text-red-500" />
-            <p className="text-xl font-semibold">
+            <p className="text-base text-center font-semibold max-w-lg">
                 {error}
             </p>
         </motion.div>

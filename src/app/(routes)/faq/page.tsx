@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function page() {
     return (
-        <PageWrapper>
+        <PageWrapper className="px-4 md:px-8">
             <FaqPage />
         </PageWrapper>
     )

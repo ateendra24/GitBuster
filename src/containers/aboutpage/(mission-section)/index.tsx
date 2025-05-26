@@ -8,17 +8,17 @@ function index() {
         {
             icon: "🎯",
             title: "Our Mission",
-            desc: "To revolutionize how developers understand and interact with codebases through AI-powered visualization and analysis."
+            desc: "To make GitHub repository analysis accessible to everyone through AI-powered insights and intuitive visualizations."
         },
         {
             icon: "💡",
             title: "Our Vision",
-            desc: "A world where every developer can easily understand, maintain, and improve any codebase, regardless of its complexity."
+            desc: "A world where developers can instantly understand any GitHub repository, regardless of its size or complexity."
         },
         {
             icon: "🤝",
             title: "Our Values",
-            desc: "We believe in transparency, continuous improvement, and empowering developers with the tools they need to succeed."
+            desc: "We believe in open source, transparency, and empowering developers with AI-driven tools that make their work easier."
         }
     ]
 
@@ -30,15 +30,14 @@ function index() {
             className="py-20 md:py-32 space-y-12 px-4 md:px-6"
         >
             <div className="max-w-7xl mx-auto">
-
-                <div className="space-y-4 text-center  max-w-3xl mx-auto">
+                <div className="space-y-4 text-center max-w-3xl mx-auto">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Our Mission</h2>
                     <p className="text-lg md:text-xl text-muted-foreground">
-                        We're on a mission to transform how developers understand and work with codebases through the power of AI and visualization.
+                        We're revolutionizing how developers understand GitHub repositories by combining the power of AI with intuitive visualization tools.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-12">
                     {missionPoints.map((point, i) => (
                         <motion.div
                             key={i}

@@ -6,34 +6,34 @@ import Image from 'next/image'
 function index() {
     const features = [
         {
-            icon: "📁",
-            title: "Code Structure Analysis",
-            desc: "Get a bird's-eye view of your codebase with interactive visualizations of folders, files, and their relationships. Navigate complex projects with ease.",
+            icon: "🤖",
+            title: "AI-Powered Analysis",
+            desc: "Get instant insights about any GitHub repository through our advanced AI analysis system. Understand code structure, patterns, and relationships.",
         },
         {
-            icon: "🤖",
-            title: "AI-Powered Summaries",
-            desc: "Our advanced AI analyzes your codebase to provide intelligent breakdowns, highlighting key components and their purposes.",
+            icon: "💬",
+            title: "Interactive Chat",
+            desc: "Chat with an AI assistant about any aspect of the codebase. Ask questions, get explanations, and receive intelligent suggestions.",
         },
         {
             icon: "📊",
-            title: "Advanced Metrics & Graphs",
-            desc: "Track code quality, complexity, and improvement opportunities with detailed metrics and interactive visualizations.",
+            title: "Code Visualization",
+            desc: "Explore interactive visualizations of repository structure, dependencies, and relationships between components.",
         },
         {
             icon: "🔍",
-            title: "Dependency Mapping",
-            desc: "Visualize and understand complex dependency relationships between modules, packages, and components.",
+            title: "Smart Search",
+            desc: "Quickly find relevant code sections, functions, and files using our intelligent search capabilities.",
         },
         {
-            icon: "📦",
-            title: "Package Insights",
-            desc: "Deep dive into your project's dependencies, versions, and potential security or compatibility issues.",
+            icon: "📈",
+            title: "Repository Metrics",
+            desc: "Get detailed insights about code quality, complexity, and potential improvement areas.",
         },
         {
-            icon: "🧠",
-            title: "Smart Code Suggestions",
-            desc: "Receive intelligent recommendations for code improvements, best practices, and optimization opportunities.",
+            icon: "🚀",
+            title: "Instant Setup",
+            desc: "Start analyzing any GitHub repository in seconds. Just paste the repository URL and let our AI do the work.",
         }
     ]
 
@@ -45,9 +45,9 @@ function index() {
             className="py-20 md:py-32 space-y-12 px-4 md:px-6"
         >
             <div className="text-center space-y-8 max-w-3xl mx-auto">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Our Technology</h2>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Powerful Features</h2>
                 <p className="text-lg md:text-xl text-muted-foreground">
-                    We're building the most advanced code understanding AI system, designed to help developers work more effectively.
+                    Everything you need to understand and analyze GitHub repositories, powered by advanced AI technology.
                 </p>
             </div>
 

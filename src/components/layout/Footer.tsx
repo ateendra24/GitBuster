@@ -6,8 +6,6 @@ import Image from 'next/image'
 
 function Footer({ className }: { className?: String }) {
     return (
-
-
         <footer className="relative rounded-lg shadow-sm">
             <div className="w-full max-w-screen-xl mx-auto p-8 md:p-4">
                 <div className="sm:flex sm:items-center sm:justify-between">
@@ -20,7 +18,13 @@ function Footer({ className }: { className?: String }) {
                             <Link href="/about" className="hover:underline me-4 md:me-6">About</Link>
                         </li>
                         <li>
-                            <Link href="/policies" className="hover:underline me-4 md:me-6">Privacy Policy</Link>
+                            <Link href="/privacy" className="hover:underline me-4 md:me-6">Privacy Policy</Link>
+                        </li>
+                        <li>
+                            <Link href="/terms" className="hover:underline me-4 md:me-6">Terms of Service</Link>
+                        </li>
+                        <li>
+                            <Link href="/cookies" className="hover:underline me-4 md:me-6">Cookie Policy</Link>
                         </li>
                         <li>
                             <Link href="/faq" className="hover:underline me-4 md:me-6">FAQs</Link>
@@ -31,7 +35,22 @@ function Footer({ className }: { className?: String }) {
                     </ul>
                 </div>
                 <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-                <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© {new Date().getFullYear()} {siteConfig.siteName}. All Rights Reserved.</span>
+                <div className="flex flex-col sm:flex-row justify-between items-center">
+                    <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">
+                        © {new Date().getFullYear()} {siteConfig.siteName}. All Rights Reserved.
+                    </span>
+                    <div className="flex gap-4 mt-4 sm:mt-0">
+                        <a href={siteConfig.socialLinks.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                            GitHub
+                        </a>
+                        <a href={siteConfig.socialLinks.x} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                            Twitter
+                        </a>
+                        <a href={siteConfig.socialLinks.linkedIn} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <Image
@@ -41,11 +60,7 @@ function Footer({ className }: { className?: String }) {
                 src='/mesh.png'
                 className='absolute bottom-0 left-0 right-0 mx-auto w-[1100px] h-[100px] lg:h-[120px] object-cover -z-10'
             />
-
         </footer>
-
-
-
     )
 }
 

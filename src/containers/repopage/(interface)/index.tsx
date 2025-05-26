@@ -2,17 +2,12 @@ import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'reac
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
-import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessageWrapper from '@/components/wrappers/MessageWrapper';
-import { ArrowUp, Copy } from 'lucide-react';
-import { toast } from "sonner"
+import { ArrowUp } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import FileTree from '@/components/pages/repopage/FileTree';
+import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 
 // Define the message structure
 type Message = {
@@ -119,10 +114,11 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                 msg.sender === 'human' ? { human: msg.text } : { ai: msg.text }
             );
 
-            const response = await axios.post('/api/chat', {
+            const response = await axios.post(`/api/chat`, {
                 message: userMessage.text,
                 chat_history: chatHistory,
-            });
+            }, { withCredentials: true });
+
 
             const aiMessage: Message = {
                 id: Date.now() + 1,
@@ -138,7 +134,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                 sender: 'ai',
                 // text: 'Sorry, I encountered an error. Please try again.',
                 text: axios.isAxiosError(error) && error.response?.data?.message
-                    ? error.response.data.message
+                    ? error.response?.data?.message
                     : 'Sorry, I encountered an error. Please try again.',
             };
             setMessages((prev) => [...prev, errorMessage]);
@@ -156,7 +152,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
     return (
         <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
             <div>
-                <div ref={chatContainerRef} className="h-full py-24 max-h-[85dvh] overflow-y-auto space-y-4 px-2">
+                <div ref={chatContainerRef} className="h-full py-24 max-h-[85dvh] overflow-y-auto space-y-4 md:px-2">
                     {messages.length === 0 ? (
                         <div className="text-center text-gray-500 dark:text-gray-400 my-8">
                             <p>Ask questions about the repository.</p>
