@@ -152,7 +152,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
     return (
         <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
             <div>
-                <div ref={chatContainerRef} className="h-full py-24 max-h-[85dvh] overflow-y-auto space-y-4 md:px-2">
+                <div ref={chatContainerRef} className="h-full pt-24 pb-32 max-h-[85dvh] overflow-y-auto space-y-4 md:px-2">
                     {messages.length === 0 ? (
                         <div className="text-center text-gray-500 dark:text-gray-400 my-8">
                             <p>Ask questions about the repository.</p>
@@ -211,10 +211,13 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                     }
                 </div>
 
+            </div >
+
+            <div className='absolute bg-background z-10 bottom-0 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl'>
                 {
                     showScrollToBottom && (
                         <MessageWrapper>
-                            <div className="absolute left-1/2 translate-x-[-50%] bottom-36 z-50">
+                            <div className="absolute left-1/2 translate-x-[-50%] -top-16 z-50">
                                 <Button
                                     size="sm"
                                     className="rounded-full shadow-lg hover:bg-primary/90 transition-all duration-500 cursor-pointer"
@@ -228,14 +231,6 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                         </MessageWrapper>
                     )
                 }
-
-            </div >
-
-            <div className='absolute z-[9] w-full bottom-0 h-20 left-1/2 translate-x-[-50%] bg-background' />
-
-
-            <div className='absolute z-10 bottom-0 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl'>
-
                 <form onSubmit={handleSendMessage}>
                     <Textarea
                         value={input}
@@ -243,6 +238,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                         placeholder="Ask about the repository..."
                         className='w-full min-h-10 h-full max-h-40 bg-white dark:bg-[#2f2f2f] border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
                         disabled={isLoading}
+                        maxLength={500}
                     />
                     <Button
                         type="submit"

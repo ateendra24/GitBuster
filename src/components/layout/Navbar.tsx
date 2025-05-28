@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTheme } from "next-themes"
 import { Moon, Sun } from 'lucide-react';
 import { RainbowButton } from '../magicui/rainbow-button';
@@ -9,9 +9,17 @@ import siteConfig from '@/config/siteConfig';
 import Github from '../icons/Github';
 import X from '../icons/X';
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation';
 
 function Navbar({ className }: { className?: string }) {
     const { setTheme, theme } = useTheme()
+    const pathname = usePathname();
+    const [isRepoPage, setIsRepoPage] = useState(false);
+
+    useEffect(() => {
+        if (pathname?.split('/').length === 3) setIsRepoPage(true)
+        else setIsRepoPage(false)
+    }, [pathname]);
 
     return (
         <>
@@ -20,10 +28,11 @@ function Navbar({ className }: { className?: string }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className={`space-y-10 fixed z-50 top-0 left-[50%] translate-x-[-50%] w-full max-w-full bg-opacity-50 backdrop-blur-3xl border-b shadow ${className}`}
+                className={`space-y-10 fixed z-40 top-0 left-[50%] translate-x-[-50%] w-full max-w-full bg-opacity-50 backdrop-blur-3xl border-b shadow ${className}`}
             >
                 <nav className={`relative w-[100%] max-w-7xl mx-auto py-3 px-6 flex justify-between items-center`}>
-                    <div className='space-x-6'>
+                    <div className='flex space-x-6'>
+                        {isRepoPage && <div className='md:hidden w-8 h-7 mr-0'></div>}
                         <Link href='/' className='font-bold'>{siteConfig.siteName} <span className='text-lg font-normal'>ᵇᵉᵗᵃ</span></Link>
                         <Link href='/about' className='opacity-70 hover:opacity-100 hidden md:inline-block'>About</Link>
                     </div>

@@ -83,18 +83,18 @@ function Index({ username, repo }: { username: string, repo: string }) {
             >
                 <SidebarProvider className="h-full w-full">
                     <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
-                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 py-8">
-                        <SidebarTrigger className="absolute top-16 left-1 z-20" />
-
-                        <div className={`h-full w-full ${activeView === 'chat' ? 'block' : 'hidden'}`}>
+                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-8 pt-12">
+                        <SidebarTrigger className="hidden md:flex absolute top-[70px] left-1 z-20" />
+                        <SidebarTrigger className="fixed top-3 left-3 md:hidden z-50" />
+                        <section id='chat' className={`h-full w-full ${activeView === 'chat' ? 'block' : 'hidden'}`}>
                             <RepoAnalysis url={url} />
-                        </div>
-                        <div className={`h-full w-full md:p-2 ${activeView === 'folder' ? 'block' : 'hidden'} `}>
+                        </section>
+                        <section id='filetree' className={`h-full w-full md:p-2 ${activeView === 'folder' ? 'block' : 'hidden'} `}>
                             <FileTree URL={url} />
-                        </div>
-                        <div className={`h-full w-full md:p-2 ${activeView === 'details' ? 'block' : 'hidden'} `}>
+                        </section>
+                        <section id='details' className={`h-full w-full md:p-2 ${activeView === 'details' ? 'block' : 'hidden'} `}>
                             <Details URL={url} />
-                        </div>
+                        </section>
 
                     </div>
                 </SidebarProvider>

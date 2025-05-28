@@ -255,6 +255,11 @@ code {
   p {
     white-space: pre-line;
 
+    code {
+        background: var(--border);
+        padding: 2px 4px;
+        border-radius: 6px;
+      }
   }
 
   ul {

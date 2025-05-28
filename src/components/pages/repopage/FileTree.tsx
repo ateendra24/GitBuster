@@ -112,7 +112,7 @@ function FileTree({ URL }: { URL: string }) {
     );
 
     return (
-        <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
+        <div className="relative px-2 py-6 md:px-6 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
 
             <p className="text-xl font-semibold mb-6">Repo File Tree</p>
             <Tree
