@@ -5,11 +5,12 @@ import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { Circle } from '../../components/icons/Circle';
-import RepoAnalysis from './(interface)';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import FileTree from '@/components/pages/repopage/FileTree';
 import { AppSidebar } from '@/components/app-sidebar';
 import Details from '@/components/pages/repopage/Details';
+import RepoAnalysis from '@/components/pages/repopage/RepoAnalysis';
+import SideBarButtons from '@/components/pages/repopage/SideBarButtons';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -83,16 +84,15 @@ function Index({ username, repo }: { username: string, repo: string }) {
             >
                 <SidebarProvider className="h-full w-full">
                     <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
-                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-8 pt-12">
-                        <SidebarTrigger className="hidden md:flex absolute top-[70px] left-1 z-20" />
-                        <SidebarTrigger className="fixed top-3 left-3 md:hidden z-50" />
-                        <section id='chat' className={`h-full w-full ${activeView === 'chat' ? 'block' : 'hidden'}`}>
+                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-8">
+                        <SideBarButtons />
+                        <section id='chat' className={`h-full w-full pt-12 ${activeView === 'chat' ? 'block' : 'hidden'}`}>
                             <RepoAnalysis url={url} />
                         </section>
-                        <section id='filetree' className={`h-full w-full md:p-2 ${activeView === 'folder' ? 'block' : 'hidden'} `}>
+                        <section id='filetree' className={`h-full w-full pt-12 max-w-7xl ${activeView === 'folder' ? 'block' : 'hidden'} `}>
                             <FileTree URL={url} />
                         </section>
-                        <section id='details' className={`h-full w-full md:p-2 ${activeView === 'details' ? 'block' : 'hidden'} `}>
+                        <section id='details' className={`h-full w-full pt-12 max-w-7xl ${activeView === 'details' ? 'block' : 'hidden'} `}>
                             <Details URL={url} />
                         </section>
 

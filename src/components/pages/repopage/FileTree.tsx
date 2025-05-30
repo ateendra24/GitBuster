@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { File, Folder, Tree } from "@/components/magicui/file-tree";
 import { Loader2 } from "lucide-react";
 
@@ -7,19 +7,28 @@ type TreeItem = {
     type: "blob" | "tree";
 };
 
-function buildTree(elements: TreeItem[]) {
-    const root: any[] = [];
-    const folderIds: string[] = [];
-    const idCounter = (() => {
-        let id = 1;
-        return () => `${id++}`;
-    })();
+type TreeNode = {
+    id: string;
+    name: string;
+    isSelectable: boolean;
+    children?: TreeNode[];
+};
 
-    const findOrCreateChild = (children: any[], name: string) => {
+// Generate unique IDs
+const generateId = (() => {
+    let id = 1;
+    return () => `${id++}`;
+})();
+
+function buildTree(elements: TreeItem[]) {
+    const root: TreeNode[] = [];
+    const folderIds: string[] = [];
+
+    const findOrCreateChild = (children: TreeNode[], name: string): TreeNode => {
         let child = children.find((c) => c.name === name);
         if (!child) {
             child = {
-                id: idCounter(),
+                id: generateId(),
                 name,
                 isSelectable: true,
                 children: [],
@@ -39,14 +48,14 @@ function buildTree(elements: TreeItem[]) {
 
             if (isFile) {
                 currentLevel.push({
-                    id: idCounter(),
+                    id: generateId(),
                     name,
                     isSelectable: true,
                 });
             } else {
                 const folder = findOrCreateChild(currentLevel, name);
-                currentLevel = folder.children;
-                folderIds.push(folder.id); // Add the folder ID to the list
+                currentLevel = folder.children!;
+                folderIds.push(folder.id);
             }
         }
     }
@@ -55,10 +64,11 @@ function buildTree(elements: TreeItem[]) {
 }
 
 function FileTree({ URL }: { URL: string }) {
-    const [owner, repo] = URL.split("/").slice(-2);
-    const [elements, setElements] = useState<any[] | null>(null);
-    const [folderIds, setFolderIds] = useState<string[]>([]); // Store the folder IDs
+    const [elements, setElements] = useState<TreeNode[] | null>(null);
+    const [folderIds, setFolderIds] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
+
+    const [owner, repo] = URL.split("/").slice(-2);
 
     useEffect(() => {
         async function fetchRepoTree() {
@@ -76,49 +86,57 @@ function FileTree({ URL }: { URL: string }) {
                 const data = await response.json();
 
                 if (!data.tree) {
-                    throw new Error("Could not fetch repository structure");
+                    throw new Error("Repository structure not available.");
                 }
 
                 const { tree, folderIds } = buildTree(data.tree);
                 setElements(tree);
-                setFolderIds(folderIds); // Set the folder IDs for expansion
+                setFolderIds(folderIds);
             } catch (err: any) {
                 console.error(err);
-                setError(err.message || "Something went wrong");
+                setError(err.message || "Failed to load repository data.");
             }
         }
 
         fetchRepoTree();
     }, [owner, repo]);
 
-    const renderTree = (items: any[]) =>
-        items.map((item) =>
-            item.children && item.children.length > 0 ? (
-                <Folder key={item.id} element={item.name} value={item.id}>
-                    {renderTree(item.children)}
-                </Folder>
-            ) : (
-                <File key={item.id} value={item.id}>
-                    <p>{item.name}</p>
-                </File>
-            )
-        );
+    const renderTree = useMemo(() => {
+        const render = (items: TreeNode[]): React.ReactNode[] =>
+            items.map((item) =>
+                item.children && item.children.length > 0 ? (
+                    <Folder key={item.id} element={item.name} value={item.id}>
+                        {render(item.children)}
+                    </Folder>
+                ) : (
+                    <File key={item.id} value={item.id}>
+                        <p>{item.name}</p>
+                    </File>
+                )
+            );
+        return render;
+    }, []);
 
-    if (error) return <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">Error: {error}</div>;
-    if (!elements) return (
-        <div className="relative p-8 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
-            <Loader2 className="animate-spin" />
-        </div>
-    );
+    if (error) {
+        return (
+            <div className="p-8 flex h-full w-full items-center justify-center bg-red-50 text-red-600 rounded-lg">
+                <p className="text-sm font-medium">Error: {error}</p>
+            </div>
+        );
+    }
+
+    if (!elements) {
+        return (
+            <div className="p-8 flex h-full w-full items-center justify-center bg-background rounded-lg">
+                <Loader2 className="animate-spin h-6 w-6 text-muted-foreground" />
+            </div>
+        );
+    }
 
     return (
-        <div className="relative px-2 py-6 md:px-6 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
-
-            <p className="text-xl font-semibold mb-6">Repo File Tree</p>
-            <Tree
-                className="w-full h-full overflow-auto p-0"
-                initialExpandedItems={folderIds}
-            >
+        <div className="relative px-4 py-6 md:px-6 flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg bg-background">
+            <p className="text-xl font-semibold mb-6">Repository File Tree</p>
+            <Tree className="w-full h-full overflow-auto p-0" initialExpandedItems={folderIds}>
                 {renderTree(elements)}
             </Tree>
         </div>

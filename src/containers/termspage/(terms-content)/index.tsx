@@ -1,15 +1,9 @@
 import React from 'react'
-import { motion } from 'framer-motion'
 import siteConfig from '@/config/siteConfig'
 
 export default function TermsContent() {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6"
-        >
+        <div className="space-y-6">
             <section className="space-y-4">
                 <h2 className="text-2xl font-semibold">1. Acceptance of Terms</h2>
                 <p className="text-muted-foreground">
@@ -92,6 +86,6 @@ export default function TermsContent() {
                     </a>
                 </div>
             </section>
-        </motion.div>
+        </div>
     )
 } 

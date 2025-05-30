@@ -9,9 +9,12 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarTrigger,
     useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { Circle } from "./icons/Circle";
 
 // Menu items with unique keys to map to state
 const items = [
@@ -38,7 +41,7 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
         <Sidebar className="mt-[60px] h-auto">
             <SidebarContent >
                 <SidebarGroup>
-                    <SidebarGroupLabel className="mb-2"><a href={`https://github.com/` + username + "/" + repo} target="_blank" className="hover:underline line-clamp-1">{username + "/" + repo}</a></SidebarGroupLabel>
+                    <SidebarGroupLabel className="my-1"><a href={`https://github.com/` + username + "/" + repo} target="_blank" className="hover:underline line-clamp-1">{username + "/" + repo}</a></SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (

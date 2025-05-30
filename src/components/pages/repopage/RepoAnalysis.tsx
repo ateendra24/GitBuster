@@ -235,6 +235,14 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
                     <Textarea
                         value={input}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+                        onKeyDown={(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                if (input.trim() && !isLoading) {
+                                    sendMessage(input);
+                                }
+                            }
+                        }}
                         placeholder="Ask about the repository..."
                         className='w-full min-h-10 h-full max-h-40 bg-white dark:bg-[#2f2f2f] border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
                         disabled={isLoading}

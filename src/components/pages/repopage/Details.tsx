@@ -96,11 +96,11 @@ function Details({ URL }: { URL: string }) {
 
     if (repoDetails)
         return (
-            <Card className="w-full h-full overflow-y-auto px-2 py-6 md:px-6 shadow-none bg-transparent backdrop-blur-sm border-border/50">
-                <CardHeader className="flex flex-col gap-4 px-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <Card className="w-full h-full overflow-y-auto px-2 py-6 md:px-6 shadow-none bg-transparent">
+                <CardHeader className="px-0">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
                         <div className="space-y-2">
-                            <h1 className="text-xl font-semibold mb-6 flex gap-2">
+                            <h1 className="text-xl font-bold flex items-center gap-2">
                                 {repoDetails.name}
                                 <div className="flex flex-wrap gap-2">
                                     {repoDetails.archived && (
@@ -108,19 +108,19 @@ function Details({ URL }: { URL: string }) {
                                             Archived
                                         </Badge>
                                     )}
-                                    <Badge variant="secondary" className="bg-blue-100/50 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
+                                    <Badge variant="secondary" className="capitalize">
                                         {repoDetails.visibility}
                                     </Badge>
                                 </div>
                             </h1>
-                            <p className="text-muted-foreground text-sm md:text-base">{repoDetails.description}</p>
+                            <p className="text-muted-foreground text-sm">{repoDetails.description}</p>
                         </div>
-
                     </div>
+
                     {repoDetails.topics.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-2 mt-4">
                             {repoDetails.topics.map((topic) => (
-                                <Badge key={topic} variant="outline" className="bg-secondary/50 hover:bg-secondary/80 transition-colors">
+                                <Badge key={topic} variant={'secondary'} className="rounded-md px-2 py-1 text-xs">
                                     {topic}
                                 </Badge>
                             ))}
@@ -128,83 +128,56 @@ function Details({ URL }: { URL: string }) {
                     )}
                 </CardHeader>
 
-                <Separator className="my-3" />
+                <Separator className="my-4" />
 
-                <CardContent className="space-y-8 px-0">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <User size={18} /> Owner
-                                </Label>
-                                <a className="text-lg font-medium hover:underline" href={"https://www.github.com/" + repoDetails.owner} target="_blank">{repoDetails.owner}</a>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <Code size={18} /> Language
-                                </Label>
-                                <p className="text-lg font-medium">{repoDetails.language || "Not specified"}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <GitBranch size={18} /> Default Branch
-                                </Label>
-                                <p className="text-lg font-medium">{repoDetails.default_branch}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <Calendar size={18} /> Created
-                                </Label>
-                                <p className="text-lg font-medium">
-                                    {new Date(repoDetails.created_at).toLocaleDateString()}
-                                </p>
-                            </div>
+                <CardContent className="px-0 space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            {[
+                                { label: "Owner", icon: <User size={18} />, value: repoDetails.owner, link: `https://github.com/${repoDetails.owner}` },
+                                { label: "Language", icon: <Code size={18} />, value: repoDetails.language || "Not specified" },
+                                { label: "Default Branch", icon: <GitBranch size={18} />, value: repoDetails.default_branch },
+                                { label: "Created", icon: <Calendar size={18} />, value: new Date(repoDetails.created_at).toLocaleDateString() },
+                            ].map(({ label, icon, value, link }) => (
+                                <div key={label}>
+                                    <Label className="text-sm flex items-center gap-2 text-muted-foreground mb-1">{icon} {label}</Label>
+                                    {link ? (
+                                        <a href={link} target="_blank" className="font-medium hover:underline">
+                                            {value}
+                                        </a>
+                                    ) : (
+                                        <p className="font-medium">{value}</p>
+                                    )}
+                                </div>
+                            ))}
                         </div>
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <Star size={18} /> Stars
-                                </Label>
-                                <p className="text-lg font-medium">{repoDetails.stargazers_count.toLocaleString()}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <GitFork size={18} /> Forks
-                                </Label>
-                                <p className="text-lg font-medium">{repoDetails.forks_count.toLocaleString()}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <Eye size={18} /> Watching
-                                </Label>
-                                <p className="text-lg font-medium">{repoDetails.watchers_count.toLocaleString()}</p>
-                            </div>
-                            <div className="space-y-2">
-                                <Label className="text-base flex items-center gap-2 text-muted-foreground">
-                                    <Clock size={18} /> Last Updated
-                                </Label>
-                                <p className="text-lg font-medium">
-                                    {new Date(repoDetails.updated_at).toLocaleDateString()}
-                                </p>
-                            </div>
+
+                        <div className="space-y-4">
+                            {[
+                                { label: "Stars", icon: <Star size={18} />, value: repoDetails.stargazers_count },
+                                { label: "Forks", icon: <GitFork size={18} />, value: repoDetails.forks_count },
+                                { label: "Watchers", icon: <Eye size={18} />, value: repoDetails.watchers_count },
+                                { label: "Last Updated", icon: <Clock size={18} />, value: new Date(repoDetails.updated_at).toLocaleDateString() },
+                            ].map(({ label, icon, value }) => (
+                                <div key={label}>
+                                    <Label className="text-sm flex items-center gap-2 text-muted-foreground mb-1">{icon} {label}</Label>
+                                    <p className="font-medium">{typeof value === 'number' ? value.toLocaleString() : value}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="space-y-3">
-                        <Label className="text-base flex items-center gap-2 text-muted-foreground">
+                    <div>
+                        <Label className="text-sm flex items-center gap-2 text-muted-foreground mb-2">
                             <File size={18} /> Repository Size
                         </Label>
-                        <div className="space-y-2">
-                            <Progress value={(repoDetails.size / 1000) * 100} className="h-2" />
-                            <p className="text-sm text-muted-foreground">
-                                {repoDetails.size.toLocaleString()} KB
-                            </p>
-                        </div>
+                        <Progress value={(repoDetails.size / 1000) * 100} className="h-2 rounded-full" />
+                        <p className="text-sm mt-1 text-muted-foreground">{repoDetails.size.toLocaleString()} KB</p>
                     </div>
 
                     {repoDetails.homepage && (
-                        <div className="space-y-2">
-                            <Label className="text-base flex items-center gap-2 text-muted-foreground">
+                        <div>
+                            <Label className="text-sm flex items-center gap-2 text-muted-foreground mb-1">
                                 <Link size={18} /> Homepage
                             </Label>
                             <TooltipProvider>
@@ -214,7 +187,7 @@ function Details({ URL }: { URL: string }) {
                                             href={repoDetails.homepage}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-primary hover:text-primary/80 transition-colors flex items-center gap-2 w-fit"
+                                            className="text-primary hover:underline text-sm flex items-center gap-2 w-fit"
                                         >
                                             {repoDetails.homepage}
                                             <ExternalLink size={14} />
@@ -238,6 +211,7 @@ function Details({ URL }: { URL: string }) {
                             <ExternalLink size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                         </a>
                     </Button>
+
                     {repoDetails.open_issues_count > 0 && (
                         <Button variant="outline" className="flex-1 group">
                             <a
@@ -253,6 +227,7 @@ function Details({ URL }: { URL: string }) {
                     )}
                 </CardFooter>
             </Card>
+
         );
 }
 

@@ -273,7 +273,7 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon className="!w-5 !h-5 opacity-70" />
+      <PanelLeftIcon className="!w-5 !h-5 opacity-50" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
