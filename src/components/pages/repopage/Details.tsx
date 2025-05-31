@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar, Eye, File, GitFork, Link, Loader2, Star, Text, User, Code, GitBranch, Clock, AlertCircle, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 
@@ -37,7 +36,12 @@ function Details({ URL }: { URL: string }) {
         async function fetchRepoDetails() {
             try {
                 const [owner, repo] = URL.split("/").slice(-2);
-                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+                    headers: {
+                        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch repository details");
@@ -77,11 +81,8 @@ function Details({ URL }: { URL: string }) {
     }, [URL]);
 
     if (error) return (
-        <div className="w-full h-full overflow-y-auto p-8 shadow-none bg-transparent">
-            <div className="flex items-center gap-2 rounded-lg">
-                <AlertCircle size={20} />
-                <p>{error}</p>
-            </div>
+        <div className="p-8 flex h-full w-full items-center justify-center rounded-lg">
+            <p className="text-sm font-medium">Error: {error}</p>
         </div>
     );
 
@@ -96,7 +97,7 @@ function Details({ URL }: { URL: string }) {
 
     if (repoDetails)
         return (
-            <Card className="w-full h-full overflow-y-auto px-2 py-6 md:px-6 shadow-none bg-transparent">
+            <Card className="w-full h-full overflow-y-auto px-2 pt-20 pb-6 md:px-6 shadow-none bg-transparent">
                 <CardHeader className="px-0">
                     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
                         <div className="space-y-2">
@@ -104,11 +105,11 @@ function Details({ URL }: { URL: string }) {
                                 {repoDetails.name}
                                 <div className="flex flex-wrap gap-2">
                                     {repoDetails.archived && (
-                                        <Badge variant="secondary" className="bg-yellow-100/50 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200">
+                                        <Badge variant="default" className="bg-yellow-100/50 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200">
                                             Archived
                                         </Badge>
                                     )}
-                                    <Badge variant="secondary" className="capitalize">
+                                    <Badge variant="default" className="capitalize">
                                         {repoDetails.visibility}
                                     </Badge>
                                 </div>
@@ -171,7 +172,6 @@ function Details({ URL }: { URL: string }) {
                         <Label className="text-sm flex items-center gap-2 text-muted-foreground mb-2">
                             <File size={18} /> Repository Size
                         </Label>
-                        <Progress value={(repoDetails.size / 1000) * 100} className="h-2 rounded-full" />
                         <p className="text-sm mt-1 text-muted-foreground">{repoDetails.size.toLocaleString()} KB</p>
                     </div>
 
@@ -202,7 +202,7 @@ function Details({ URL }: { URL: string }) {
                     )}
                 </CardContent>
 
-                <Separator className="my-6" />
+                <Separator className="my-4" />
 
                 <CardFooter className="flex flex-col sm:flex-row gap-4 p-0">
                     <Button variant="default" className="flex-1 group">

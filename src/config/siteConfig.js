@@ -1,7 +1,7 @@
 const siteConfig = {
     siteName: "RepoAI",
     siteUrl: "",
-    tagline: "GitHub Code Analyzer",
+    tagline: "GitHub Repo Analyzer",
     description: "Analyze any GitHub repository with AI. Input a repository URL, and chat with an AI assistant about the codebase.",
     author: {
         name: "Ateendra",

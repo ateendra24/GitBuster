@@ -19,7 +19,7 @@ type ChatInterfaceProps = {
     url: string;
 };
 
-const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
+const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -150,7 +150,7 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
 
 
     return (
-        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
+        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2 pt-12'>
             <div>
                 <div ref={chatContainerRef} className="h-full pt-24 pb-32 max-h-[85dvh] overflow-y-auto space-y-4 md:px-2">
                     {messages.length === 0 ? (
@@ -265,4 +265,4 @@ const RepoAnalysis: React.FC<ChatInterfaceProps> = ({ url }) => {
     );
 };
 
-export default RepoAnalysis;
+export default Chat;

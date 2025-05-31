@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import React from 'react'
-import FileTree from './FileTree'
+import FileTree from './FolderStructure'
 import { Loader2 } from 'lucide-react'
 import Details from './Details'
 

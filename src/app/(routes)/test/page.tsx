@@ -9,6 +9,8 @@ import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { useCopyToClipboard } from 'react-use';
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import Details from '@/components/pages/repopage/Details'
+import RepoGraph from '@/components/pages/repopage/RepoGraph'
 
 function page() {
     const [state, copyToClipboard] = useCopyToClipboard();
@@ -52,37 +54,42 @@ function page() {
 
 
     return (
-        <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
-            <ReactMarkdown
-                className='AI-message text-sm md:text-base space-y-6'
-                components={{
-                    code({ node, inline, className, children, ...props }) {
-                        const match = /language-(\w+)/.exec(className || "");
-                        return !inline && match ? (
-                            <CodeBlock
-                                language={match[1]}
-                                value={String(children).trim()}
-                            />
-                        ) : (
-                            <code className={className} {...props}>
-                                {children}
-                            </code>
-                        );
-                    },
-                }}
-            >
-                {data3.response}
-            </ReactMarkdown>
-            <div className='fixed bottom-10 left-1/2 translate-x-[-50%] fixed w-full max-w-3xl'>
-                <Textarea className='w-full h-full max-h-44 bg-white dark:bg-[#2f2f2f] border shadow-2xl rounded-3xl px-6 py-4 !text-lg pr-12 resize-none' />
-                <Button
-                    type="submit"
-                    className="w-fit absolute top-3 right-2 rounded-full cursor-pointer"
+        <>
+            {/* <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
+                <ReactMarkdown
+                    className='AI-message text-sm md:text-base space-y-6'
+                    components={{
+                        code({ node, inline, className, children, ...props }) {
+                            const match = /language-(\w+)/.exec(className || "");
+                            return !inline && match ? (
+                                <CodeBlock
+                                    language={match[1]}
+                                    value={String(children).trim()}
+                                />
+                            ) : (
+                                <code className={className} {...props}>
+                                    {children}
+                                </code>
+                            );
+                        },
+                    }}
                 >
-                    <ArrowUp size={1} />
-                </Button>
-            </div>
-        </div>
+                    {data3.response}
+                </ReactMarkdown>
+                <div className='fixed bottom-10 left-1/2 translate-x-[-50%] w-full max-w-3xl'>
+                    <Textarea className='w-full h-full max-h-44 bg-white dark:bg-[#2f2f2f] border shadow-2xl rounded-3xl px-6 py-4 !text-lg pr-12 resize-none' />
+                    <Button
+                        type="submit"
+                        className="w-fit absolute top-3 right-2 rounded-full cursor-pointer"
+                    >
+                        <ArrowUp size={1} />
+                    </Button>
+                </div>
+            </div> */}
+
+            {/* <RepoGraph URL={"https://github.com/magicuidesign/magicui"} /> */}
+            {/* <Details URL={"https://github.com/ateendra24/blog"} /> */}
+        </>
     )
 }
 

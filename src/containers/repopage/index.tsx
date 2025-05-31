@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 import { Info } from 'lucide-react';
 import { Circle } from '../../components/icons/Circle';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import FileTree from '@/components/pages/repopage/FileTree';
 import { AppSidebar } from '@/components/app-sidebar';
 import Details from '@/components/pages/repopage/Details';
-import RepoAnalysis from '@/components/pages/repopage/RepoAnalysis';
-import SideBarButtons from '@/components/pages/repopage/SideBarButtons';
+import RepoPageNavbar from '@/components/layout/RepoPageNavbar';
+import RepoGraph from '@/components/pages/repopage/RepoGraph';
+import FolderStructure from '@/components/pages/repopage/FolderStructure';
+import Chat from '@/components/pages/repopage/Chat';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -23,7 +24,11 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [loading, setLoading] = useState(true);
     const [processed, setProcessed] = useState(false);
     const [error, setError] = useState('');
-    const [activeView, setActiveView] = useState<'chat' | 'folder' | 'details'>('chat');
+    const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph'>('Chat');
+    const [repoData, setRepoData] = useState<any>(null);
+
+    console.log("repoData: ", repoData);
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,6 +45,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
                 );
                 if (response.status === 200) {
                     setProcessed(true);
+                    setRepoData(response.data);
                 }
             } catch (error: any) {
                 console.error('Error processing repository:', error);
@@ -84,16 +90,20 @@ function Index({ username, repo }: { username: string, repo: string }) {
             >
                 <SidebarProvider className="h-full w-full">
                     <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
-                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-8">
-                        <SideBarButtons />
-                        <section id='chat' className={`h-full w-full pt-12 ${activeView === 'chat' ? 'block' : 'hidden'}`}>
-                            <RepoAnalysis url={url} />
+                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-4">
+                        {/* <SideBarButtons /> */}
+                        <RepoPageNavbar />
+                        <section id='Chat' className={`h-full w-full ${activeView === 'Chat' ? 'block' : 'hidden'}`}>
+                            <Chat url={url} />
                         </section>
-                        <section id='filetree' className={`h-full w-full pt-12 max-w-7xl ${activeView === 'folder' ? 'block' : 'hidden'} `}>
-                            <FileTree URL={url} />
+                        <section id='FolderStructure' className={`h-full w-full max-w-7xl ${activeView === 'FolderStructure' ? 'block' : 'hidden'} `}>
+                            <FolderStructure URL={url} />
                         </section>
-                        <section id='details' className={`h-full w-full pt-12 max-w-7xl ${activeView === 'details' ? 'block' : 'hidden'} `}>
+                        <section id='Details' className={`h-full w-full max-w-7xl ${activeView === 'Details' ? 'block' : 'hidden'} `}>
                             <Details URL={url} />
+                        </section>
+                        <section id='RepoGraph' className={`h-full w-full max-w-7xl ${activeView === 'RepoGraph' ? 'block' : 'hidden'} `}>
+                            <RepoGraph />
                         </section>
 
                     </div>

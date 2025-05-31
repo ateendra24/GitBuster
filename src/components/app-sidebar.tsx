@@ -1,4 +1,4 @@
-import { BookUser, FolderTree, MessagesSquare } from "lucide-react";
+import { BookUser, FolderTree, MessagesSquare, Workflow } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -13,19 +13,18 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { Button } from "./ui/button";
-import { Circle } from "./icons/Circle";
 
 // Menu items with unique keys to map to state
 const items = [
-    { title: "Chat", key: "chat", icon: MessagesSquare },
-    { title: "Folder Structure", key: "folder", icon: FolderTree },
-    { title: "Details", key: "details", icon: BookUser },
+    { title: "Chat", key: "Chat", icon: MessagesSquare },
+    { title: "FolderStructure", key: "FolderStructure", icon: FolderTree },
+    { title: "Details", key: "Details", icon: BookUser },
+    // { title: "RepoGraph", key: "RepoGraph", icon: Workflow }
 ];
 
 export function AppSidebar({ setActiveView, activeView, username, repo }: {
-    setActiveView: (key: 'chat' | 'folder' | 'details') => void;
-    activeView: 'chat' | 'folder' | 'details';
+    setActiveView: (key: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph') => void;
+    activeView: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph';
     username: string;
     repo: string;
 }) {
@@ -38,7 +37,7 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
     }
 
     return (
-        <Sidebar className="mt-[60px] h-auto">
+        <Sidebar>
             <SidebarContent >
                 <SidebarGroup>
                     <SidebarGroupLabel className="my-1"><a href={`https://github.com/` + username + "/" + repo} target="_blank" className="hover:underline line-clamp-1">{username + "/" + repo}</a></SidebarGroupLabel>
