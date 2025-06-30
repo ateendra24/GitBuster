@@ -204,6 +204,28 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
             .style("fill", "var(--foreground)")
             .text((d) => d.data.name);
 
+        const fileLabels = g
+            .filter((d) => !d.children)
+            .append("text")
+            .attr("class", "file-label")
+            .text((d) => {
+                const name = d.data.name;
+                const maxLen = Math.floor(d.r / 3);
+                if (d.r < 10) return '';
+                if (name.length > maxLen && maxLen >= 3) {
+                    return name.slice(0, maxLen - 1) + '...';
+                } else if (name.length <= maxLen) {
+                    return name;
+                }
+                return '';
+            })
+            .style("text-anchor", "middle")
+            .style("fill", "var(--foreground)")
+            .style("font-size", "12px")
+            .style("font-weight", "600")
+            .style("display", "block")
+            .attr("dy", ".35em")
+
         g.filter((d) => !d.children)
             .on("mouseover", function () {
                 d3.select(this).raise();
@@ -247,11 +269,11 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
 
     useEffect(() => {
         fetchRepoTree();
-    }, [repoUrl, fetchRepoTree]);
+    }, [repoUrl]);
 
     useEffect(() => {
         drawChart();
-    }, [data, searchQuery, drawChart]);
+    }, [data, searchQuery]);
 
     return (
         <div className="px-2 md:px-6 pt-20 h-dvh overflow-y-auto">
