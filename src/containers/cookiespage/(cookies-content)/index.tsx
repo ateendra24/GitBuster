@@ -100,8 +100,8 @@ export default function CookiesContent() {
                         </p>
                         <ul className="list-disc pl-6 space-y-2 text-muted-foreground mt-2">
                             <li><strong>Essential cookies:</strong> Disabling these will prevent chat sessions and repository analysis from working properly</li>
-                            <li><strong>Functionality cookies:</strong> You'll lose saved preferences and have to re-enter repository URLs</li>
-                            <li><strong>Performance cookies:</strong> We won't be able to optimize loading times for repository visualizations</li>
+                            <li><strong>Functionality cookies:</strong> You&apos;ll lose saved preferences and have to re-enter repository URLs</li>
+                            <li><strong>Performance cookies:</strong> We won&apos;t be able to optimize loading times for repository visualizations</li>
                         </ul>
                     </div>
 
@@ -168,10 +168,10 @@ export default function CookiesContent() {
                         <strong>Without Essential Cookies:</strong> Repository analysis, chat functionality, and visualizations will not work.
                     </p>
                     <p className="text-muted-foreground">
-                        <strong>Without Functionality Cookies:</strong> You'll need to re-enter repository URLs and reconfigure visualization preferences each visit.
+                        <strong>Without Functionality Cookies:</strong> You&apos;ll need to re-enter repository URLs and reconfigure visualization preferences each visit.
                     </p>
                     <p className="text-muted-foreground">
-                        <strong>Without Performance Cookies:</strong> Repository processing may be slower, and we can't optimize the experience based on usage patterns.
+                        <strong>Without Performance Cookies:</strong> Repository processing may be slower, and we can&apos;t optimize the experience based on usage patterns.
                     </p>
                 </div>
             </section>

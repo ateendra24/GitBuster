@@ -120,7 +120,7 @@ export default function TermsContent() {
                 <h2 className="text-2xl font-semibold">8. Intellectual Property and Third-Party Services</h2>
                 <div className="space-y-2">
                     <p className="text-muted-foreground">
-                        <strong>GitHub Integration:</strong> This service uses the GitHub API and is subject to GitHub's terms of service and rate limiting policies.
+                        <strong>GitHub Integration:</strong> This service uses the GitHub API and is subject to GitHub&apos;s terms of service and rate limiting policies.
                     </p>
                     <p className="text-muted-foreground">
                         <strong>Repository Content:</strong> All analyzed repository content remains the property of the original repository owners. We do not claim ownership of user-provided repository data.
@@ -180,7 +180,7 @@ export default function TermsContent() {
                 </p>
                 <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                     <li>We are not liable for any indirect, incidental, or consequential damages</li>
-                    <li>AI-generated analysis is provided "as is" without warranties</li>
+                    <li>AI-generated analysis is provided &quot;as is&quot; without warranties</li>
                     <li>Users are responsible for verifying AI insights and code analysis</li>
                     <li>We are not responsible for GitHub API availability or changes</li>
                     <li>Repository visualization accuracy depends on source data quality</li>

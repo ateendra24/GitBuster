@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Calendar, Eye, File, GitFork, Link, Loader2, Star, Text, User, Code, GitBranch, Clock, AlertCircle, ExternalLink } from "lucide-react";
+import { Calendar, Eye, File, GitFork, Link, Loader2, Star, User, Code, GitBranch, Clock, AlertCircle, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import React from 'react'
 
-function QuickActions({ sendMessage, isLoading, url }: { sendMessage: (message: string) => void, isLoading: boolean, url: string }) {
+function QuickActions({ sendMessage, isLoading }: { sendMessage: (message: string) => void, isLoading: boolean }) {
     // This component renders a set of buttons that trigger different actions when clicked.
     // Each button sends a specific message to the sendMessage function when clicked.
     return (

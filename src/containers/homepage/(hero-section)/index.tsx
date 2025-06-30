@@ -1,10 +1,4 @@
-import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text'
-import siteConfig from '@/config/siteConfig'
-import { cn } from '@/lib/utils'
-import { ArrowRightIcon } from 'lucide-react'
-import Link from 'next/link'
 import React from 'react'
-import { Circle } from '../../../components/icons/Circle'
 import Introducing from '@/components/pages/homepage/Introducing'
 import TitleDesc from '@/components/pages/homepage/TitleDesc'
 

@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
 import React from 'react'
-import Image from 'next/image'
 
 function index() {
     const missionPoints = [
@@ -33,7 +32,7 @@ function index() {
                 <div className="space-y-4 text-center max-w-3xl mx-auto">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Our Mission</h2>
                     <p className="text-lg md:text-xl text-muted-foreground">
-                        We're revolutionizing how developers understand GitHub repositories by combining the power of AI with intuitive visualization tools.
+                        We&apos;re revolutionizing how developers understand GitHub repositories by combining the power of AI with intuitive visualization tools.
                     </p>
                 </div>
 

@@ -1,8 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowRight, Github, Code2, Brain, Sparkles, BarChart3 } from 'lucide-react'
-import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 
 function index() {
     const steps = [

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import siteConfig from '@/config/siteConfig'
 import Image from 'next/image'
 
-function Footer({ className }: { className?: String }) {
+function Footer() {
     return (
         <footer className="relative rounded-lg shadow-sm">
             <div className="w-full max-w-screen-xl mx-auto p-8 md:p-4">

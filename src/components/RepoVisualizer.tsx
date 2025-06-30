@@ -64,9 +64,6 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
     const [error, setError] = useState<string | null>(null);
     const svgRef = useRef<SVGSVGElement | null>(null);
 
-    const truncateText = (text: string, maxLength: number): string =>
-        text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
-
     const getRepoDetails = (url: string) => {
         const match = url.match(/github\.com\/(.+?)\/(.+?)(?:$|\.git)/);
         if (!match) throw new Error("Invalid GitHub URL");
@@ -207,39 +204,8 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
             .style("fill", "var(--foreground)")
             .text((d) => d.data.name);
 
-        const fileLabels = g
-            .filter((d) => !d.children)
-            .append("text")
-            .attr("class", "file-label")
-            .text((d) => {
-                const name = d.data.name;
-                const maxLen = Math.floor(d.r / 3);
-                if (d.r < 10) return '';
-                if (name.length > maxLen && maxLen >= 3) {
-                    return name.slice(0, maxLen - 1) + '...';
-                } else if (name.length <= maxLen) {
-                    return name;
-                }
-                return '';
-            })
-            .style("text-anchor", "middle")
-            .style("fill", "var(--foreground)")
-            .style("font-size", "12px")
-            .style("font-weight", "600")
-            .style("display", "block")
-            .attr("dy", ".35em")
-
-        // Track SVG hover state
-        // svg
-        //     .on("mouseenter", () => {
-        //         svg.selectAll(".file-label").style("display", "none");
-        //     })
-        //     .on("mouseleave", () => {
-        //         svg.selectAll(".file-label").style("display", "block");
-        //     });
-
         g.filter((d) => !d.children)
-            .on("mouseover", function (event, d) {
+            .on("mouseover", function () {
                 d3.select(this).raise();
 
                 if (svgRef.current?.matches(":hover")) {
@@ -254,7 +220,7 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
                         .attr("stroke-width", 2);
                 }
             })
-            .on("mouseout", function (event, d) {
+            .on("mouseout", function () {
                 if (svgRef.current?.matches(":hover")) {
                     d3.select(this)
                         .select("circle")

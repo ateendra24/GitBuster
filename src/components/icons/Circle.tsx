@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Circle = ({ className }: { className?: String }) => (
+export const Circle = ({ className }: { className?: string }) => (
     <svg className={`w-8 md:w-10 h-8 md:h-10 ${className}`} fill="none" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#cs_clip_1_ellipse-12)">
             <mask height="200" id="cs_mask_1_ellipse-12" style={{ "maskType": "alpha" }} width="200" x="0" y="0" maskUnits="userSpaceOnUse">

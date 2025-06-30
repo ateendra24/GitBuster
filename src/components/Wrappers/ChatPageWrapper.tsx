@@ -18,7 +18,7 @@ function ChatPageWrapper({ children, className }: { children?: ReactNode, classN
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className={`flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto`}
+                className={`flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto ${className}`}
             >
 
                 {children}

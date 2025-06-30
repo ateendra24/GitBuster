@@ -2,7 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Mail, MessageSquare, Linkedin, Github } from 'lucide-react'
+import { MessageSquare, Github } from 'lucide-react'
 import siteConfig from '@/config/siteConfig'
 
 function index() {
@@ -35,7 +35,7 @@ function index() {
                 <p className="md:text-lg text-muted-foreground leading-relaxed">
                     Have questions about our GitHub repository analyzer? Want to contribute or provide feedback?
                     <br />
-                    We're here to help and would love to hear from you!
+                    We&apos;re here to help and would love to hear from you!
                 </p>
             </div>
 

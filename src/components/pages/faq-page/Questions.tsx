@@ -89,7 +89,7 @@ function Questions() {
                 <AccordionTrigger>Is this free to use for commercial projects?</AccordionTrigger>
                 <AccordionContent>
                     Yes! {siteConfig.siteName} is free to use for both personal and commercial projects.
-                    Just ensure you're analyzing repositories you have permission to access and follow our Terms of Service.
+                    Just ensure you&apos;re analyzing repositories you have permission to access and follow our Terms of Service.
                 </AccordionContent>
             </AccordionItem>
 
@@ -114,7 +114,7 @@ function Questions() {
                 <AccordionContent>
                     If analysis fails, check that the GitHub URL is correct and the repository is public.
                     Common issues include invalid URLs, private repositories, or repositories with non-standard branch names.
-                    The platform currently supports repositories with 'main' or 'master' branches.
+                    The platform currently supports repositories with &apos;main&apos; or &apos;master&apos; branches.
                 </AccordionContent>
             </AccordionItem>
 

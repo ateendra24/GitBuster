@@ -1,8 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Card, CardContent } from '@/components/ui/card'
-import { GitBranch, GitCommit, GitPullRequest, GitMerge } from 'lucide-react'
 
 function index() {
 

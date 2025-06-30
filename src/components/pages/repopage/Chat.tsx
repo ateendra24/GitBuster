@@ -156,7 +156,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                     <div className="text-center text-gray-500 dark:text-gray-400 my-8">
                         <p>Ask questions about the repository.</p>
                         <p className="mt-2 text-sm">
-                            Try: "What's the main functionality of this repo?" or "How is the code organized?"
+                            Try: &quot;What&apos;s the main functionality of this repo?&quot; or &quot;How is the code organized?&quot;
                         </p>
                     </div>
                 ) : (
@@ -253,7 +253,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                     >
                         <ArrowUp size={1} />
                     </Button>
-                    <QuickActions url={url} sendMessage={sendMessage} isLoading={isLoading} />
+                    <QuickActions sendMessage={sendMessage} isLoading={isLoading} />
 
                 </form>
 

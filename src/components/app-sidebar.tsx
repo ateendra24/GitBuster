@@ -9,7 +9,6 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarTrigger,
     useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
@@ -48,7 +47,7 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
                                     <SidebarMenuButton asChild className="cursor-pointer hover:bg-border/40 py-5 rounded-lg">
                                         <button
                                             className="flex items-center gap-2"
-                                            onClick={() => setActiveView(item.key as any)}
+                                            onClick={() => setActiveView(item.key as 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph')}
                                         >
                                             <item.icon />
                                             <span>{item.title}</span>
