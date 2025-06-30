@@ -1,26 +1,3 @@
-// import axios from 'axios';
-
-// export default async function handler(req, res) {
-//     // Only allow POST requests
-//     if (req.method !== 'POST') {
-//         return res.status(405).json({ message: 'Method not allowed' });
-//     }
-
-//     try {
-//         // Forward the request to the backend
-//         const response = await axios.post(`${process.env.BACKEND_URL}/chat`, req.body);
-//         return res.status(200).json(response.data);
-//     } catch (error) {
-//         console.error('Error chatting with repo:', error);
-//         return res.status(error.response?.status || 500).json({
-//             message: 'Error processing chat',
-//             detail: error.response?.data?.detail || error.message
-//         });
-//     }
-// } 
-
-
-
 import axios from 'axios'
 import { Redis } from '@upstash/redis'
 
@@ -38,7 +15,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    // Identify user (or IP fallback)
+    // Identify user by session_id if provided, else fallback to IP
     const sessionId = req.body.session_id
     const ip =
         req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
@@ -55,19 +32,37 @@ export default async function handler(req, res) {
             return res.status(429).json({ message: 'Daily chat limit reached (20).' })
         }
 
-        // Only increment if under the limit
-        await redis.incr(userKey)
-        if (count === 0) {
+        const newCount = await redis.incr(userKey)
+        if (newCount === 1) {
             await redis.expire(userKey, ONE_DAY_SECONDS)
         }
+        console.log(`[RateLimit] ${userKey} => ${newCount}/20`)
+
     } catch (err) {
         console.error('[Redis Error]', err)
-        // Optionally allow the request to go through if Redis fails
+        // Optional: let request continue if Redis fails
     }
 
     try {
-        const response = await axios.post(`${process.env.BACKEND_URL}/chat`, req.body)
-        return res.status(200).json(response.data)
+        const backendRes = await axios.post(
+            `${process.env.BACKEND_URL}/chat`,
+            req.body,
+            {
+                headers: {
+                    Cookie: req.headers.cookie || '',
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            }
+        )
+
+        // ✅ Forward `Set-Cookie` from backend to browser if present
+        const setCookie = backendRes.headers['set-cookie']
+        if (setCookie) {
+            res.setHeader('Set-Cookie', setCookie)
+        }
+
+        return res.status(backendRes.status).json(backendRes.data)
     } catch (error) {
         console.error('Error chatting with repo:', error)
         return res.status(error.response?.status || 500).json({

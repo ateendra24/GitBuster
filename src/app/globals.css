@@ -134,7 +134,7 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(1 0 0);
+  --background: oklch(0.99 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
@@ -196,7 +196,7 @@
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar: oklch(0.170 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
@@ -219,6 +219,7 @@
   body {
     @apply bg-background text-foreground;
   }
+
 }
 
 ::-webkit-scrollbar {
@@ -229,15 +230,6 @@ code {
   white-space: pre-line;
 }
 
-.CustomCardHeight {
-  max-height: calc(100vh - 200px);
-}
-
-.scrollbar-thin {
-  scrollbar-width: thin;
-  ;
-}
-
 @media (min-width: 768px) {
   .CustomCardHeight {
     max-height: calc(100vh - 170px);
@@ -246,19 +238,33 @@ code {
 
 .AI-message {
 
-  code {
-    white-space: pre-line;
-    background-color: var(--border);
-    padding: 0 8px;
-    border-radius: 4px;
+  width: 100%;
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+    font-weight: 600;
   }
 
   p {
     white-space: pre-line;
 
+    code {
+        background: var(--border);
+        padding: 2px 4px;
+        border-radius: 6px;
+      }
   }
 
   ul {
+    list-style: disc;
+    padding-left: 16px;
     li {
       margin-bottom: 16px;
     }
@@ -278,9 +284,7 @@ code {
   }
 }
 
-.code-block {
-  background-color: var(--border);
-  padding: 12px;
-  border-radius: 8px;
-  margin: 10px 0;
+pre {
+  margin-top: 0 !important;
+  border-radius: 0 0 6px 6px;
 }

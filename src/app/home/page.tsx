@@ -1,8 +1,8 @@
-import Main from './(components)/Main';
+import HomePage from '@/containers/homepage/index';
 
 export default function Page() {
 
     return (
-        <Main />
+        <HomePage />
     );
 }
