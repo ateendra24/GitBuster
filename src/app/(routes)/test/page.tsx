@@ -2,15 +2,12 @@
 import PageWrapper from '@/components/wrappers/PageWrapper'
 import React, { isValidElement, ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
-import { ArrowUp, Copy } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { toast } from "sonner"
-import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { useCopyToClipboard } from 'react-use';
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import Details from '@/components/pages/repopage/Details'
-import RepoGraph from '@/components/pages/repopage/RepoGraph'
+import RepoVisualizer from '@/components/RepoVisualizer'
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { ArrowUp } from 'lucide-react';
+import CodeBlock from '@/components/pages/repopage/CodeBlock';
 
 function page() {
     const [state, copyToClipboard] = useCopyToClipboard();
@@ -54,8 +51,8 @@ function page() {
 
 
     return (
-        <>
-            {/* <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
+        <div className='flex items-center justify-center w-full'>
+            <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
                 <ReactMarkdown
                     className='AI-message text-sm md:text-base space-y-6'
                     components={{
@@ -85,11 +82,11 @@ function page() {
                         <ArrowUp size={1} />
                     </Button>
                 </div>
-            </div> */}
+            </div>
 
-            {/* <RepoGraph URL={"https://github.com/magicuidesign/magicui"} /> */}
-            {/* <Details URL={"https://github.com/ateendra24/blog"} /> */}
-        </>
+            {/* <RepoVisualizer repoUrl="https://github.com/hiteshchoudhary/AI-ticket-system" /> */}
+
+        </div>
     )
 }
 

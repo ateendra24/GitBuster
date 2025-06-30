@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import { Outfit } from 'next/font/google';
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import siteConfig from "@/config/siteConfig";
 import Navbar from "@/components/layout/Navbar";
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: `${siteConfig.siteName} beta - GitHub Code Analyzer`,
@@ -19,12 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
-      <head >
+    <html lang="en" className={`${GeistSans.className} ${outfit.variable} antialiased`} suppressHydrationWarning>
+      <head>
         <link rel="icon" href="/favicon.png" sizes="any" />
-
       </head>
-      <body className="bg-background">
+      <body className="bg-background font-sans">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

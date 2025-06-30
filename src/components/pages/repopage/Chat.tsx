@@ -150,70 +150,68 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
 
     return (
-        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2 pt-12'>
-            <div>
-                <div ref={chatContainerRef} className="h-full pt-24 pb-32 max-h-[85dvh] overflow-y-auto space-y-4 md:px-2">
-                    {messages.length === 0 ? (
-                        <div className="text-center text-gray-500 dark:text-gray-400 my-8">
-                            <p>Ask questions about the repository.</p>
-                            <p className="mt-2 text-sm">
-                                Try: "What's the main functionality of this repo?" or "How is the code organized?"
-                            </p>
-                        </div>
-                    ) : (
-                        messages.map((message) => (
-                            <div key={message.id} className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}>
-                                <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
-                                    {message.sender === 'ai' ? (
-                                        <MessageWrapper>
-                                            <div className="AI-message text-sm md:text-base space-y-6">
-                                                <ReactMarkdown
-                                                    className='AI-message text-sm md:text-base space-y-6'
-                                                    components={{
-                                                        code({ node, inline, className, children, ...props }) {
-                                                            const match = /language-(\w+)/.exec(className || "");
-                                                            return !inline && match ? (
-                                                                <CodeBlock
-                                                                    language={match[1]}
-                                                                    value={String(children).trim()}
-                                                                />
-                                                            ) : (
-                                                                <code className={className} {...props}>
-                                                                    {children}
-                                                                </code>
-                                                            );
-                                                        },
-                                                    }}
-                                                >
-                                                    {message.text}
-                                                </ReactMarkdown>
+        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
+            <div ref={chatContainerRef} className="h-full pt-28 pb-40 max-h-dvh overflow-y-auto space-y-4 md:px-2">
+                {messages.length === 0 ? (
+                    <div className="text-center text-gray-500 dark:text-gray-400 my-8">
+                        <p>Ask questions about the repository.</p>
+                        <p className="mt-2 text-sm">
+                            Try: "What's the main functionality of this repo?" or "How is the code organized?"
+                        </p>
+                    </div>
+                ) : (
+                    messages.map((message) => (
+                        <div key={message.id} className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}>
+                            <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
+                                {message.sender === 'ai' ? (
+                                    <MessageWrapper>
+                                        <div className="AI-message text-sm md:text-base space-y-6">
+                                            <ReactMarkdown
+                                                className='AI-message text-sm md:text-base space-y-6'
+                                                components={{
+                                                    code({ node, inline, className, children, ...props }) {
+                                                        const match = /language-(\w+)/.exec(className || "");
+                                                        return !inline && match ? (
+                                                            <CodeBlock
+                                                                language={match[1]}
+                                                                value={String(children).trim()}
+                                                            />
+                                                        ) : (
+                                                            <code className={`${className} whitespace-break-spaces`} {...props}>
+                                                                {children}
+                                                            </code>
+                                                        );
+                                                    },
+                                                }}
+                                            >
+                                                {message.text}
+                                            </ReactMarkdown>
 
 
 
-                                            </div>
-                                        </MessageWrapper>
+                                        </div>
+                                    </MessageWrapper>
 
-                                    ) : (
+                                ) : (
+                                    <MessageWrapper>
                                         <p className='px-3'>{message.text}</p>
-
-                                    )}
-                                </div>
+                                    </MessageWrapper>
+                                )}
                             </div>
-                        ))
+                        </div>
+                    ))
 
-                    )}
-                    {
-                        isLoading && (
-                            <div className='mb-32'>
-                                <AnimatedShinyText>Thinking Response...</AnimatedShinyText>
-                            </div>
-                        )
-                    }
-                </div>
+                )}
+                {
+                    isLoading && (
+                        <div className='mb-32'>
+                            <AnimatedShinyText>Thinking Response...</AnimatedShinyText>
+                        </div>
+                    )
+                }
+            </div>
 
-            </div >
-
-            <div className='absolute bg-background z-10 bottom-0 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl'>
+            <div className='absolute bg-background/50 backdrop-blur-sm z-10 bottom-0 pb-2 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl rounded-t-3xl'>
                 {
                     showScrollToBottom && (
                         <MessageWrapper>
@@ -244,14 +242,14 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                             }
                         }}
                         placeholder="Ask about the repository..."
-                        className='w-full min-h-10 h-full max-h-40 bg-white dark:bg-[#2f2f2f] border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
+                        className='w-full min-h-10 h-full max-h-40 bg-white/30 dark:bg-[#2f2f2f]/30 border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
                         disabled={isLoading}
                         maxLength={500}
                     />
                     <Button
                         type="submit"
-                        className="w-fit absolute bottom-14 right-2 rounded-full cursor-pointer"
-                        disabled={isLoading || input.length === 0}
+                        className="w-fit absolute bottom-16 right-2 rounded-full cursor-pointer"
+                        disabled={isLoading || input.length <= 1}
                     >
                         <ArrowUp size={1} />
                     </Button>

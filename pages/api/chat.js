@@ -7,7 +7,7 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
 })
 
-const MAX_MESSAGES_PER_DAY = 20
+const MAX_MESSAGES_PER_DAY = process.env.REPO_MAX_MESSAGES_PER_DAY
 const ONE_DAY_SECONDS = 60 * 60 * 24 // 24 hours
 
 export default async function handler(req, res) {
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         const count = current ? parseInt(current) : 0
 
         if (count >= MAX_MESSAGES_PER_DAY) {
-            return res.status(429).json({ message: 'Daily chat limit reached (20).' })
+            return res.status(429).json({ message: `Daily chat limit reached (${MAX_MESSAGES_PER_DAY}).` })
         }
 
         const newCount = await redis.incr(userKey)

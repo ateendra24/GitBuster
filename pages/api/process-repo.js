@@ -7,7 +7,7 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
 })
 
-const MAX_REQUESTS = 2 // Max allowed per IP per day
+const MAX_REQUESTS = process.env.REPOPROCESS_MAX_REQUESTS // Max allowed per IP per day
 const WINDOW_SECONDS = 60 * 60 * 24 // 24 hours
 
 export default async function handler(req, res) {
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
         const count = current ? parseInt(current) : 0
 
         if (count >= MAX_REQUESTS) {
-            return res.status(429).json({ message: 'You can only process 2 repos per day.' })
+            return res.status(429).json({ message: `You can only process ${MAX_REQUESTS} repos per day.` })
         }
 
         await redis.incr(key)

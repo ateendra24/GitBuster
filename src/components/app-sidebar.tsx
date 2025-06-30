@@ -19,7 +19,7 @@ const items = [
     { title: "Chat", key: "Chat", icon: MessagesSquare },
     { title: "FolderStructure", key: "FolderStructure", icon: FolderTree },
     { title: "Details", key: "Details", icon: BookUser },
-    // { title: "RepoGraph", key: "RepoGraph", icon: Workflow }
+    { title: "RepoGraph", key: "RepoGraph", icon: Workflow }
 ];
 
 export function AppSidebar({ setActiveView, activeView, username, repo }: {
@@ -44,8 +44,8 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
-                                <SidebarMenuItem onClick={closeSideBar} key={item.key} className={`${item.key === activeView ? "bg-border" : ""} rounded-md`}>
-                                    <SidebarMenuButton asChild className="cursor-pointer hover:bg-border/40 py-5">
+                                <SidebarMenuItem onClick={closeSideBar} key={item.key} className={`${item.key === activeView ? "bg-border" : ""} rounded-lg`}>
+                                    <SidebarMenuButton asChild className="cursor-pointer hover:bg-border/40 py-5 rounded-lg">
                                         <button
                                             className="flex items-center gap-2"
                                             onClick={() => setActiveView(item.key as any)}
@@ -61,9 +61,10 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                <div className="p-2 flex gap-3 text-xs text-muted-foreground">
+                <div className="p-2 flex gap-5 text-xs text-muted-foreground">
                     <Link href={"/privacy"} className="hover:underline" target="_blank">Privacy Policy</Link>
                     <Link href={"/faq"} className="hover:underline" target="_blank">FAQs</Link>
+                    <Link href={"/cookies"} className="hover:underline" target="_blank">Cookies</Link>
                 </div>
             </SidebarFooter>
         </Sidebar>
