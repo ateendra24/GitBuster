@@ -3,10 +3,10 @@ import siteConfig from '@/config/siteConfig';
 import RepoPage from '@/containers/repopage/index';
 import { Metadata } from 'next';
 
-type Params = {
+type Params = Promise<{
     username: string;
     repo: string;
-};
+}>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
     const { username, repo } = await params;
