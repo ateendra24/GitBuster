@@ -1,4 +1,4 @@
-import { ChatPageWrapper } from '@/components/wrappers';
+import ChatPageWrapper from '@/components/wrappers/ChatPageWrapper';
 import siteConfig from '@/config/siteConfig';
 import RepoPage from '@/containers/repopage/index';
 import { Metadata } from 'next';
