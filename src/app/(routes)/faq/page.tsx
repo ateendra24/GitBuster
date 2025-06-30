@@ -1,4 +1,4 @@
-import { PageWrapper } from "@/components/wrappers"
+import PageWrapper from '@/components/wrappers/PageWrapper';
 import siteConfig from "@/config/siteConfig"
 import { Metadata } from "next"
 import FaqPage from "@/containers/faq-page/index"
