@@ -30,7 +30,7 @@ function Footer({ className }: { className?: String }) {
                             <Link href="/faq" className="hover:underline me-4 md:me-6">FAQs</Link>
                         </li>
                         <li>
-                            <Link href="/contact" className="hover:underline">Contact</Link>
+                            <Link href={siteConfig.socialLinks.contact} target='_blank' className="hover:underline">Contact</Link>
                         </li>
                     </ul>
                 </div>

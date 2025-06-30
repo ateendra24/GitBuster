@@ -18,7 +18,7 @@ function index() {
                     {siteConfig.siteName}
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Your AI-powered GitHub repository analyzer. Understand any codebase instantly with intelligent insights and interactive visualizations.
+                    Instantly chat with your codebase. Ask questions, get explanations, and explore your project with AI-powered assistance.
                 </p>
                 <div className="flex justify-center gap-4">
                     <Button asChild>
