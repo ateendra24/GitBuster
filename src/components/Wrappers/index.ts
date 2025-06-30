@@ -1,6 +1,3 @@
-// Re-export all wrapper components with explicit exports
-import PageWrapper from './PageWrapper';
-import ChatPageWrapper from './ChatPageWrapper';
-import MessageWrapper from './MessageWrapper';
-
-export { PageWrapper, ChatPageWrapper, MessageWrapper };
+export { default as PageWrapper } from './PageWrapper';
+export { default as ChatPageWrapper } from './ChatPageWrapper';
+export { default as MessageWrapper } from './MessageWrapper';

@@ -3,9 +3,9 @@ import { PageWrapper } from '@/components/wrappers'
 import siteConfig from '@/config/siteConfig'
 import axios from 'axios'
 import { CircleAlert, CircleCheck } from 'lucide-react'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-function page() {
+function HealthPage() {
     const [status, setStatus] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
@@ -26,7 +26,8 @@ function page() {
             } else {
                 setError('Failed to fetch health status')
             }
-        } catch (error) {
+        } catch (err) {
+            console.error('Health check error:', err)
             setError('Server is down')
         } finally {
             setLoading(false)
@@ -50,4 +51,4 @@ function page() {
     )
 }
 
-export default page
+export default HealthPage
