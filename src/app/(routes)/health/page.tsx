@@ -1,5 +1,5 @@
 "use client"
-import PageWrapper from '@/components/wrappers/PageWrapper'
+import { PageWrapper } from '../../../components/wrappers'
 import siteConfig from '@/config/siteConfig'
 import axios from 'axios'
 import { CircleAlert, CircleCheck } from 'lucide-react'
@@ -15,7 +15,6 @@ function page() {
         setLoading(true)
         try {
             const response = await axios.get('api/health', {
-                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
