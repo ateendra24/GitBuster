@@ -27,7 +27,7 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
             viewport={{ once: true }}
             className={`space-y-10 ${position} z-40 top-0 left-[50%] translate-x-[-50%] w-full max-w-full bg-opacity-50 backdrop-blur-3xl border-b shadow ${className}`}
         >
-            <nav className={`relative w-[100%] max-w-7xl mx-auto py-3 px-6 flex justify-between items-center`}>
+            <nav className={`relative w-[100%] max-w-[1440px] mx-auto py-3 px-6 flex justify-between items-center`}>
                 <div className='flex space-x-4 items-center'>
                     {children}
                     <Link href='/' className='font-bold'>{siteConfig.siteName} <span className='text-lg font-normal'>ᵇᵉᵗᵃ</span></Link>
@@ -35,7 +35,7 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                 </div>
 
                 <div className='flex items-center gap-1 md:gap-2'>
-                    <RainbowButton className='py-0 px-4 h-9 text-sm hidden md:flex gap-2 items-center'> <Github color='black' /> Star on Github</RainbowButton>
+                    <RainbowButton className='py-0 px-4 h-9 text-sm hidden lg:flex gap-2 items-center'> <Github color='black' /> Star on Github</RainbowButton>
 
                     <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-gray-200 dark:hover:bg-[#353535] rounded-md'>
                         <X />

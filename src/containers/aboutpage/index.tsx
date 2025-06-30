@@ -11,13 +11,13 @@ export default function index() {
 
 
     return (
-        <div >
+        <>
             <HeroSection />
             <FeaturesSection />
             <MissionSection />
             <HowItWorksSection />
             <CodeSection />
             <ContactSection />
-        </div>
+        </>
     )
 }

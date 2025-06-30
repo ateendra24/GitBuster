@@ -12,6 +12,7 @@ import RepoPageNavbar from '@/components/layout/RepoPageNavbar';
 import RepoGraph from '@/components/pages/repopage/RepoGraph';
 import FolderStructure from '@/components/pages/repopage/FolderStructure';
 import Chat from '@/components/pages/repopage/Chat';
+import RepoVisualizer from '@/components/RepoVisualizer';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -90,7 +91,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             >
                 <SidebarProvider className="h-full w-full">
                     <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
-                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 pb-4">
+                    <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 ">
                         {/* <SideBarButtons /> */}
                         <RepoPageNavbar />
                         <section id='Chat' className={`h-full w-full ${activeView === 'Chat' ? 'block' : 'hidden'}`}>
@@ -103,7 +104,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
                             <Details URL={url} />
                         </section>
                         <section id='RepoGraph' className={`h-full w-full max-w-7xl ${activeView === 'RepoGraph' ? 'block' : 'hidden'} `}>
-                            <RepoGraph />
+                            <RepoVisualizer repoUrl={url} />
                         </section>
 
                     </div>

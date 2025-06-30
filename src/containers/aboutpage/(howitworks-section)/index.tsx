@@ -53,6 +53,7 @@ function index() {
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.1 }}
+                            viewport={{ once: true }}
                             className="relative"
                         >
                             <Card className="bg-background/60 border-muted backdrop-blur shadow-md hover:shadow-xl transition py-2">

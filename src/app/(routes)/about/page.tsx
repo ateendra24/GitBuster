@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function page() {
 
     return (
-        <PageWrapper className="!max-w-7xl px-4 md:px-8">
+        <PageWrapper className="!max-w-7xl px-4 md:px-8 !py-0">
             <AboutPage />
         </PageWrapper>
     )
