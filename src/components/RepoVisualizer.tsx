@@ -247,11 +247,11 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
 
     useEffect(() => {
         fetchRepoTree();
-    }, [repoUrl]);
+    }, [repoUrl, fetchRepoTree]);
 
     useEffect(() => {
         drawChart();
-    }, [data, searchQuery]);
+    }, [data, searchQuery, drawChart]);
 
     return (
         <div className="px-2 md:px-6 pt-20 h-dvh overflow-y-auto">

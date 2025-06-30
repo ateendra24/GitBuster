@@ -57,7 +57,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
         };
 
         fetchData();
-    }, []);
+    }, [url]);
 
 
     if (loading) {
