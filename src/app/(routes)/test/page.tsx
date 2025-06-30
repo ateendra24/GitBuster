@@ -1,5 +1,5 @@
 "use client"
-import PageWrapper from '@/components/wrappers/PageWrapper'
+import PageWrapper from '@/components/Wrappers/PageWrapper'
 import React, { isValidElement, ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useCopyToClipboard } from 'react-use';
