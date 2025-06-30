@@ -106,23 +106,27 @@ function FolderStructure({ URL }: { URL: string }) {
             try {
                 let response = await fetch(
                     `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-
-                if (response.status === 404) {
-                    response = await fetch(
-                        `https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`,
-                        {
+                    process.env.NEXT_PUBLIC_GITHUB_TOKEN
+                        ? {
                             headers: {
                                 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
                                 'Accept': 'application/vnd.github.v3+json'
                             }
                         }
+                        : {}
+                );
+
+                if (response.status === 404) {
+                    response = await fetch(
+                        `https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`,
+                        process.env.NEXT_PUBLIC_GITHUB_TOKEN
+                            ? {
+                                headers: {
+                                    'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
+                                    'Accept': 'application/vnd.github.v3+json'
+                                }
+                            }
+                            : {}
                     );
                 }
 

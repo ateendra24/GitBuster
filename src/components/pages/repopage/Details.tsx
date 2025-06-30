@@ -36,12 +36,16 @@ function Details({ URL }: { URL: string }) {
         async function fetchRepoDetails() {
             try {
                 const [owner, repo] = URL.split("/").slice(-2);
-                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-                    headers: {
-                        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`,
+                    process.env.NEXT_PUBLIC_GITHUB_TOKEN
+                        ? {
+                            headers: {
+                                'Authorization': `Bearer ${process.env.NEXT_PUBLIC_GITHUB_TOKEN}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                        : {}
+                );
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch repository details");
