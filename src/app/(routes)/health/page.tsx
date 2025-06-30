@@ -1,5 +1,5 @@
 "use client"
-import { PageWrapper } from '../../../components/wrappers'
+import { PageWrapper } from '@/components/wrappers'
 import siteConfig from '@/config/siteConfig'
 import axios from 'axios'
 import { CircleAlert, CircleCheck } from 'lucide-react'

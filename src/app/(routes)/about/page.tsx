@@ -1,4 +1,4 @@
-import { PageWrapper } from "../../../components/wrappers";
+import { PageWrapper } from "@/components/wrappers";
 import { Metadata } from "next";
 import siteConfig from "@/config/siteConfig";
 import AboutPage from "@/containers/aboutpage/index";
