@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'reac
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
-import MessageWrapper from '@/components/wrappers/MessageWrapper';
+import { MessageWrapper } from '@/components/wrappers';
 import { ArrowUp } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
