@@ -11,7 +11,8 @@ import Details from '@/components/pages/repopage/Details';
 import RepoPageNavbar from '@/components/layout/RepoPageNavbar';
 import FolderStructure from '@/components/pages/repopage/FolderStructure';
 import Chat from '@/components/pages/repopage/Chat';
-import RepoVisualizer from '@/components/RepoVisualizer';
+import RepoVisualizer from '@/components/pages/repopage/RepoVisualizer';
+import DependencyGraph from '@/components/pages/repopage/DependencyGraph';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -24,7 +25,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [loading, setLoading] = useState(true);
     const [processed, setProcessed] = useState(false);
     const [error, setError] = useState('');
-    const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph'>('Chat');
+    const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph'>('Chat');
     const [repoData, setRepoData] = useState<any>(null);
 
     console.log("repoData: ", repoData);
@@ -50,7 +51,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             } catch (error: any) {
                 console.error('Error processing repository:', error);
                 toast.error(error?.response?.data?.message || 'Error processing repository');
-                setError(error?.response?.data?.message || 'Error processing repository');
+                setError(error?.response?.data?.detail || 'Error processing repository');
             } finally {
                 setLoading(false);
             }
@@ -105,6 +106,10 @@ function Index({ username, repo }: { username: string, repo: string }) {
                         <section id='RepoGraph' className={`h-full w-full max-w-7xl ${activeView === 'RepoGraph' ? 'block' : 'hidden'} `}>
                             <RepoVisualizer repoUrl={url} />
                         </section>
+                        <section id='DependencyGraph' className={`h-full w-full max-w-7xl ${activeView === 'DependencyGraph' ? 'block' : 'hidden'} `}>
+                            <DependencyGraph URL={url} />
+                        </section>
+
 
                     </div>
                 </SidebarProvider>

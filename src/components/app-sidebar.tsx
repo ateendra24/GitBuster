@@ -1,4 +1,4 @@
-import { BookUser, FolderTree, MessagesSquare, Workflow } from "lucide-react";
+import { BookUser, FolderTree, MessagesSquare, Workflow, GitBranch } from "lucide-react";
 import {
     Sidebar,
     SidebarContent,
@@ -18,12 +18,13 @@ const items = [
     { title: "Chat", key: "Chat", icon: MessagesSquare },
     { title: "FolderStructure", key: "FolderStructure", icon: FolderTree },
     { title: "Details", key: "Details", icon: BookUser },
-    { title: "RepoGraph", key: "RepoGraph", icon: Workflow }
+    { title: "RepoGraph", key: "RepoGraph", icon: Workflow },
+    { title: "Dependencies", key: "DependencyGraph", icon: GitBranch }
 ];
 
 export function AppSidebar({ setActiveView, activeView, username, repo }: {
-    setActiveView: (key: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph') => void;
-    activeView: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph';
+    setActiveView: (key: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph') => void;
+    activeView: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph';
     username: string;
     repo: string;
 }) {
@@ -47,7 +48,7 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
                                     <SidebarMenuButton asChild className="cursor-pointer hover:bg-border/40 py-5 rounded-lg">
                                         <button
                                             className="flex items-center gap-2"
-                                            onClick={() => setActiveView(item.key as 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph')}
+                                            onClick={() => setActiveView(item.key as 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph')}
                                         >
                                             <item.icon />
                                             <span>{item.title}</span>

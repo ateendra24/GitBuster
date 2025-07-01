@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import axios from "axios";
-import { Input } from "./ui/input";
+import { Input } from "../../ui/input";
 
 const FILE_COLORS: Record<string, string> = {
     ".js": "#b39ddb",
@@ -289,7 +289,7 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
                 <div className="text-destructive">{error}</div>
             )}
             <svg ref={svgRef}></svg>
-            <div className="mt-5">
+            {/* <div className="mt-5">
                 <h4 className="text-lg font-semibold mb-2">Legend</h4>
                 <ul className="flex gap-4 flex-wrap list-none p-0">
                     {Object.entries(FILE_COLORS).map(([ext, color]) => (
@@ -305,7 +305,7 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 };
