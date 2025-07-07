@@ -8,6 +8,7 @@ const FILE_COLORS: Record<string, string> = {
     ".ts": "#b39ddb",
     ".jsx": "#c866d9",
     ".tsx": "#c866d9",
+    ".py": "#c866d9",
     ".css": "#dce775",
     ".json": "#f06292",
     ".md": "#5c6bc0",
@@ -23,6 +24,8 @@ const FILE_COLORS: Record<string, string> = {
     ".java": "#c866d9",
     ".properties": "#81d4fa",
     ".log": "#ffeb3b",
+    ".sh": "#ff5722",
+    ".txt": "#9e9e9e",
     default: "transparent",
 };
 

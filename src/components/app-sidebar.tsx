@@ -18,13 +18,13 @@ const items = [
     { title: "Chat", key: "Chat", icon: MessagesSquare },
     { title: "FolderStructure", key: "FolderStructure", icon: FolderTree },
     { title: "Details", key: "Details", icon: BookUser },
-    { title: "RepoGraph", key: "RepoGraph", icon: Workflow },
+    { title: "Repo Visualizer", key: "RepoVisualizer", icon: Workflow },
     { title: "Dependencies", key: "DependencyGraph", icon: GitBranch }
 ];
 
 export function AppSidebar({ setActiveView, activeView, username, repo }: {
-    setActiveView: (key: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph') => void;
-    activeView: 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph';
+    setActiveView: (key: 'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph') => void;
+    activeView: 'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph';
     username: string;
     repo: string;
 }) {
@@ -48,7 +48,7 @@ export function AppSidebar({ setActiveView, activeView, username, repo }: {
                                     <SidebarMenuButton asChild className="cursor-pointer hover:bg-border/40 py-5 rounded-lg">
                                         <button
                                             className="flex items-center gap-2"
-                                            onClick={() => setActiveView(item.key as 'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph')}
+                                            onClick={() => setActiveView(item.key as 'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph')}
                                         >
                                             <item.icon />
                                             <span>{item.title}</span>

@@ -210,7 +210,7 @@ function FolderStructure({ URL }: { URL: string }) {
     if (error) {
         return (
             <div className="p-8 flex h-full w-full items-center justify-center rounded-lg">
-                <p className="text-sm font-medium">Error: {error}</p>
+                <p className="text-destructive text-sm font-medium">Error: {error}</p>
             </div>
         );
     }

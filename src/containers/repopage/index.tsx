@@ -25,7 +25,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [loading, setLoading] = useState(true);
     const [processed, setProcessed] = useState(false);
     const [error, setError] = useState('');
-    const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoGraph' | 'DependencyGraph'>('Chat');
+    const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph'>('Chat');
     const [repoData, setRepoData] = useState<any>(null);
 
     console.log("repoData: ", repoData);
@@ -51,7 +51,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             } catch (error: any) {
                 console.error('Error processing repository:', error);
                 toast.error(error?.response?.data?.message || 'Error processing repository');
-                setError(error?.response?.data?.detail || 'Error processing repository');
+                setError(error?.response?.data?.message || 'Error processing repository');
             } finally {
                 setLoading(false);
             }
@@ -103,7 +103,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
                         <section id='Details' className={`h-full w-full max-w-7xl ${activeView === 'Details' ? 'block' : 'hidden'} `}>
                             <Details URL={url} />
                         </section>
-                        <section id='RepoGraph' className={`h-full w-full max-w-7xl ${activeView === 'RepoGraph' ? 'block' : 'hidden'} `}>
+                        <section id='RepoVisualizer' className={`h-full w-full max-w-7xl ${activeView === 'RepoVisualizer' ? 'block' : 'hidden'} `}>
                             <RepoVisualizer repoUrl={url} />
                         </section>
                         <section id='DependencyGraph' className={`h-full w-full max-w-7xl ${activeView === 'DependencyGraph' ? 'block' : 'hidden'} `}>
