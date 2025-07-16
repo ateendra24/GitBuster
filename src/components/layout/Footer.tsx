@@ -46,9 +46,9 @@ function Footer() {
                         <a href={siteConfig.socialLinks.x} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                             Twitter
                         </a>
-                        <a href={siteConfig.socialLinks.linkedIn} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                        {/* <a href={siteConfig.socialLinks.linkedIn} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
                             LinkedIn
-                        </a>
+                        </a> */}
                     </div>
                 </div>
             </div>

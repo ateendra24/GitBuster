@@ -32,26 +32,31 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                     {children}
                     <Link href='/' className='font-bold'>{siteConfig.siteName} <span className='text-lg font-normal'>ᵇᵉᵗᵃ</span></Link>
                     <Link href='/about' className='opacity-70 hover:opacity-100 hidden md:inline-block'>About</Link>
+                    <Link href='/faq' className='opacity-70 hover:opacity-100 hidden md:inline-block'>FAQs</Link>
                 </div>
 
                 <div className='flex items-center gap-1 md:gap-2'>
-                    <RainbowButton className='py-0 px-4 h-9 text-sm hidden lg:flex gap-2 items-center'> <Github color='black' /> Star on Github</RainbowButton>
+                    <a href={siteConfig.socialLinks.github} target='_blank' >
+                        <RainbowButton className='py-0 px-4 h-9 text-sm hidden lg:flex gap-2 items-center'>
+                            <Github color='black' /> Github
+                        </RainbowButton>
+                    </a>
 
-                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-gray-200 dark:hover:bg-[#353535] rounded-md'>
+                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl'>
                         <X />
                     </a>
 
-                    <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-gray-200 dark:hover:bg-[#353535] rounded-md'>
+                    {/* <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl'>
                         <Github />
-                    </a>
+                    </a> */}
 
                     {theme === "light" ? (
-                        <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-gray-200 rounded-md cursor-pointer'>
-                            <Sun className="h-[22px] w-[22px]" />
+                        <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
+                            <Sun className="h-[22px] w-[22px]" strokeWidth={1.5} />
                         </button>
                     ) : (
-                        <button onClick={() => setTheme("light")} className='p-1.5 hover:bg-[#353535] rounded-md cursor-pointer'>
-                            <Moon className="h-[22px] w-[22px]" />
+                        <button onClick={() => setTheme("light")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
+                            <Moon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                         </button>
                     )}
                 </div>

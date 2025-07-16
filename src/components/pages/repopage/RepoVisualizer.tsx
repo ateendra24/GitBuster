@@ -280,7 +280,7 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
 
     return (
         <div className="px-2 md:px-6 pt-20 h-dvh overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4">📦 GitHub Repo Visualizer</h2>
+            <h2 className="text-xl font-bold mb-4">GitHub Repo Visualizer</h2>
             <Input
                 type="text"
                 placeholder="Search for a file..."

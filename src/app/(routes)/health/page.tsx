@@ -19,7 +19,6 @@ function HealthPage() {
                     'Content-Type': 'application/json',
                 },
             })
-            console.log("response", response);
 
             if (response.status) {
                 setStatus(response.data.message || 'Server is running')
@@ -28,7 +27,11 @@ function HealthPage() {
             }
         } catch (err) {
             console.error('Health check error:', err)
-            setError('Server is down')
+            if (typeof err === 'object' && err !== null && 'status' in err && (err as any).status == 429) {
+                setError('Too many requests, please try again later')
+            } else {
+                setError('Server is down')
+            }
         } finally {
             setLoading(false)
         }

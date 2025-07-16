@@ -3,11 +3,13 @@ import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp, Square } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
 import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
+import siteConfig from '@/config/siteConfig';
+import Link from 'next/link';
 
 // Define the message structure
 type Message = {
@@ -229,7 +231,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         </MessageWrapper>
                     )
                 }
-                <form onSubmit={handleSendMessage}>
+                <form onSubmit={handleSendMessage} className='relative'>
                     <Textarea
                         value={input}
                         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
@@ -248,15 +250,34 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                     />
                     <Button
                         type="submit"
-                        className="w-fit absolute bottom-16 right-2 rounded-full cursor-pointer"
+                        className="w-fit absolute bottom-14 right-2 rounded-full cursor-pointer"
                         disabled={isLoading || input.length <= 1}
                     >
-                        <ArrowUp size={1} />
+                        {isLoading ? (<Square fill='currentColor' size={1} />) : (<ArrowUp size={1} />)}
                     </Button>
                     <QuickActions sendMessage={sendMessage} isLoading={isLoading} />
 
                 </form>
 
+                {messages.length == 0 ? (
+                    <div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
+                        By messaging {siteConfig.siteName}, you agree to our{' '}
+                        <Link href="/terms" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                            Terms
+                        </Link>{' '}
+                        and have read our{' '}
+                        <Link href="/privacy" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                            Privacy Policy
+                        </Link>
+                        . See{' '}
+                        <Link href="/cookies" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                            Cookie Preferences
+                        </Link>
+                        .
+                    </div>
+                ) : (<div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
+                    {siteConfig.siteName} can make mistakes. Check important info.
+                </div>)}
 
             </div>
         </div >
