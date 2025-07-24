@@ -5,7 +5,7 @@ function QuickActions({ sendMessage, isLoading }: { sendMessage: (message: strin
     // This component renders a set of buttons that trigger different actions when clicked.
     // Each button sends a specific message to the sendMessage function when clicked.
     return (
-        <div className="w-full overflow-x-auto px-3 py-2 font-thin">
+        <div className="QuickActions w-full overflow-x-auto px-5 py-2 font-thin">
             <div className="flex gap-2 whitespace-nowrap">
                 <Button
                     className='py-1 px-2 rounded-full text-sm h-fit cursor-pointer font-normal'

@@ -223,15 +223,24 @@
     @apply bg-background text-foreground font-sans antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-outfit font-semibold tracking-tight;
   }
 
-  p, li, span, div {
+  p,
+  li,
+  span,
+  div {
     @apply font-sans;
   }
 
-  code, pre {
+  code,
+  pre {
     @apply font-mono;
   }
 
@@ -252,6 +261,7 @@
 
     ul {
       @apply list-disc pl-4;
+
       li {
         @apply font-sans mb-4;
       }
@@ -259,8 +269,10 @@
 
     ol {
       @apply list-decimal pl-4;
+
       li {
         @apply font-sans mb-4;
+
         ::marker {
           @apply font-bold;
         }
@@ -282,4 +294,28 @@
 pre {
   margin-top: 0 !important;
   border-radius: 0 0 6px 6px;
+}
+
+.QuickActions::before {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 32px;
+  background: #000000;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+  position: absolute;
+  bottom: 8px;
+  left: 0px;
+}
+
+.QuickActions::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 32px;
+  background: #000000;
+  background: linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+  position: absolute;
+  bottom: 8px;
+  right: 0px;
 }

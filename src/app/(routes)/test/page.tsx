@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
+import Chat from '@/components/pages/repopage/Chat';
 
 function page() {
 
@@ -15,40 +16,44 @@ function page() {
 
 
     return (
-        <div className='flex items-center justify-center w-full'>
-            <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
-                <ReactMarkdown
-                    className='AI-message text-sm md:text-base space-y-6'
-                    components={{
-                        code({ node, inline, className, children, ...props }) {
-                            const match = /language-(\w+)/.exec(className || "");
-                            return !inline && match ? (
-                                <CodeBlock
-                                    language={match[1]}
-                                    value={String(children).trim()}
-                                />
-                            ) : (
-                                <code className={className} {...props}>
-                                    {children}
-                                </code>
-                            );
-                        },
-                    }}
-                >
-                    {data3.response}
-                </ReactMarkdown>
-                <div className='fixed bottom-10 left-1/2 translate-x-[-50%] w-full max-w-3xl'>
-                    <Textarea className='w-full h-full max-h-44 bg-white dark:bg-[#2f2f2f] border shadow-2xl rounded-3xl px-6 py-4 !text-lg pr-12 resize-none' />
-                    <Button
-                        type="submit"
-                        className="w-fit absolute top-3 right-2 rounded-full cursor-pointer"
-                    >
-                        <ArrowUp size={1} />
-                    </Button>
-                </div>
-            </div>
+        // <div className='flex items-center justify-center w-full'>
+        //     <div className='w-full max-w-3xl mx-auto mt-22 px-6 py-12'>
+        //         <ReactMarkdown
+        //             className='AI-message text-sm md:text-base space-y-6'
+        //             components={{
+        //                 code({ node, inline, className, children, ...props }) {
+        //                     const match = /language-(\w+)/.exec(className || "");
+        //                     return !inline && match ? (
+        //                         <CodeBlock
+        //                             language={match[1]}
+        //                             value={String(children).trim()}
+        //                         />
+        //                     ) : (
+        //                         <code className={className} {...props}>
+        //                             {children}
+        //                         </code>
+        //                     );
+        //                 },
+        //             }}
+        //         >
+        //             {data3.response}
+        //         </ReactMarkdown>
+        //         <div className='fixed bottom-10 left-1/2 translate-x-[-50%] w-full max-w-3xl'>
+        //             <Textarea className='w-full h-full max-h-44 bg-white dark:bg-[#2f2f2f] border shadow-2xl rounded-3xl px-6 py-4 !text-lg pr-12 resize-none' />
+        //             <Button
+        //                 type="submit"
+        //                 className="w-fit absolute top-3 right-2 rounded-full cursor-pointer"
+        //             >
+        //                 <ArrowUp size={1} />
+        //             </Button>
+        //         </div>
+        //     </div>
 
 
+        // </div>
+
+        <div className='w-full h-dvh'>
+            <Chat url={"https://github.com/ateendra24/blog"} />
         </div>
     )
 }
