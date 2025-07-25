@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import siteConfig from '@/config/siteConfig';
 import Link from 'next/link';
+import Warning from './Warning';
 
 // Define the message structure
 type Message = {
@@ -213,7 +214,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 }
             </div>
 
-            <div className='absolute bg-background/50 backdrop-blur-sm z-10 bottom-0 pb-2 left-1/2 translate-x-[-50%] w-[100%] max-w-4xl rounded-t-3xl'>
+            <div className='absolute bg-background/50 backdrop-blur-sm z-10 bottom-0 pb-2 left-1/2 translate-x-[-50%] w-full max-w-4xl rounded-t-3xl'>
                 {
                     showScrollToBottom && (
                         <MessageWrapper>
@@ -231,6 +232,11 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         </MessageWrapper>
                     )
                 }
+
+                {messages.length == 0 && (
+                    <Warning />
+                )}
+
                 <form onSubmit={handleSendMessage} className='relative'>
                     <Textarea
                         value={input}
@@ -259,25 +265,9 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
                 </form>
 
-                {messages.length == 0 ? (
-                    <div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
-                        By messaging {siteConfig.siteName}, you agree to our{' '}
-                        <Link href="/terms" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
-                            Terms
-                        </Link>{' '}
-                        and have read our{' '}
-                        <Link href="/privacy" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
-                            Privacy Policy
-                        </Link>
-                        . See{' '}
-                        <Link href="/cookies" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
-                            Cookie Preferences
-                        </Link>
-                        .
-                    </div>
-                ) : (<div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
+                <div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
                     {siteConfig.siteName} can make mistakes. Check important info.
-                </div>)}
+                </div>
 
             </div>
         </div >

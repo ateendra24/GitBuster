@@ -51,7 +51,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             } catch (error: any) {
                 console.error('Error processing repository:', error);
                 toast.error(error?.response?.data?.message || 'Error processing repository');
-                setError(error?.response?.data?.message || 'Error processing repository');
+                setError(error?.response?.data?.detail || 'Error processing repository');
             } finally {
                 setLoading(false);
             }
@@ -124,7 +124,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex flex-col items-center justify-center h-full space-y-4"
+            className="flex flex-col items-center justify-center h-full space-y-4 px-4"
         >
             <Info className="h-12 w-12 text-red-500" />
             <p className="text-base text-center font-semibold max-w-lg">
