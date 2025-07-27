@@ -11,9 +11,10 @@ function Warning() {
     // It also includes a close button to dismiss the warning.
     const [visible, setVisible] = useState(true)
     const fadeInVariants = {
-        initial: { opacity: 0 },
+        initial: { opacity: 0, y: 20 },
         animate: {
             opacity: 1,
+            y: 0,
             transition: {
                 duration: 0.5,
                 delay: 1
@@ -21,6 +22,7 @@ function Warning() {
         },
         exit: {
             opacity: 0,
+            y: 20,
             transition: {
                 duration: 0.5
             }
@@ -52,7 +54,7 @@ function Warning() {
                     <Link href="/cookies" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
                         Cookie Preferences
                     </Link>
-                    . Don't share sensitive info. {' '}
+                    . Don&apos;t share sensitive info. {' '}
                     <Link href="/faq" target='_blank' className="underline hover:text-gray-700 dark:hover:text-gray-300">
                         Learn more
                     </Link>

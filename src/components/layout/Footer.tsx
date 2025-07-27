@@ -1,4 +1,3 @@
-import React from 'react'
 import { Circle } from '../icons/Circle'
 import Link from 'next/link'
 import siteConfig from '@/config/siteConfig'
@@ -28,9 +27,6 @@ function Footer() {
                         </li>
                         <li>
                             <Link href="/faq" className="hover:underline me-4 md:me-6">FAQs</Link>
-                        </li>
-                        <li>
-                            <Link href={siteConfig.socialLinks.contact} target='_blank' className="hover:underline">Contact</Link>
                         </li>
                     </ul>
                 </div>

@@ -181,9 +181,6 @@ export default function CookiesContent() {
                 <p className="text-muted-foreground">
                     We may update this Cookie Policy when we add new features to our repository analysis platform or change how we handle data. Significant changes will be communicated through the platform. Continued use indicates acceptance of updated cookie practices.
                 </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                    Last updated: {new Date().toLocaleDateString()}
-                </p>
             </section>
 
             <section className="space-y-4">
