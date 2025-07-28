@@ -320,17 +320,17 @@ pre {
 
 /* Light mode override */
 :root .QuickActions::before {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(90deg, rgba(252, 252, 252, 1) 0%, rgba(252, 252, 252, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
 }
 
 :root .QuickActions::after {
-  background: linear-gradient(270deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(270deg, rgba(252, 252, 252, 1) 0%, rgba(252, 252, 252, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
 }
 
 .dark .QuickActions::before {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(90deg, rgba(9, 9, 11, 1) 0%, rgba(9, 9, 11, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
 }
 
 .dark .QuickActions::after {
-  background: linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(270deg, rgba(9, 9, 11, 1) 0%, rgba(9, 9, 11, 0.35) 50%, rgba(255, 255, 255, 0) 100%);
 }
