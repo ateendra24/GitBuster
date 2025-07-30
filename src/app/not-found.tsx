@@ -9,12 +9,12 @@ export default function NotFound() {
         <PageWrapper className="flex flex-col items-center justify-center px-4 text-center space-y-6">
             <h1 className="text-6xl font-bold">404</h1>
             <h2 className="text-2xl font-semibold">Page Not Found</h2>
-            <p className="text-muted-foreground max-w-md">
+            <p className="text-muted-foreground max-w-lg">
                 Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </p>
             <Button variant="default" asChild>
                 <Link href="/">
-                    Go back home
+                    Home
                 </Link>
             </Button>
             <DotPattern

@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         if (newCount === 1) {
             await redis.expire(userKey, ONE_DAY_SECONDS)
         }
-        console.log(`[RateLimit] ${userKey} => ${newCount}/20`)
+        console.log(`[RateLimit] ${userKey} => ${newCount}/${MAX_MESSAGES_PER_DAY}`)
 
     } catch (err) {
         console.error('[Redis Error]', err)

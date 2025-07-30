@@ -11,6 +11,7 @@ import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import siteConfig from '@/config/siteConfig';
 import Link from 'next/link';
 import Warning from './Warning';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Define the message structure
 type Message = {
@@ -180,11 +181,24 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                                 value={String(children).trim()}
                                                             />
                                                         ) : (
-                                                            <code className={`${className} whitespace-break-spaces`} {...props}>
+                                                            <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
                                                                 {children}
                                                             </code>
                                                         );
                                                     },
+                                                    a: ({ node, ...props }) => (
+                                                        <Tooltip>
+                                                            <TooltipTrigger> <a
+                                                                className="text-blue-400 hover:underline"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                {...props}
+                                                            /></TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Open Link</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    ),
                                                 }}
                                             >
                                                 {message.text}

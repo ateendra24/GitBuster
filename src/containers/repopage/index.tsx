@@ -13,6 +13,8 @@ import FolderStructure from '@/components/pages/repopage/FolderStructure';
 import Chat from '@/components/pages/repopage/Chat';
 import RepoVisualizer from '@/components/pages/repopage/RepoVisualizer';
 import DependencyGraph from '@/components/pages/repopage/DependencyGraph';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -127,9 +129,14 @@ function Index({ username, repo }: { username: string, repo: string }) {
             className="flex flex-col items-center justify-center h-full space-y-4 px-4"
         >
             <Info className="h-12 w-12 text-red-500" />
-            <p className="text-base text-center font-semibold max-w-lg">
-                {error}
+            <p className="text-base text-center font-semibold max-w-md">
+                {error.startsWith("Failed") ? "An unexpected error occurred." : error}
             </p>
+            <Button variant="default" asChild>
+                <Link href="/">
+                    Home
+                </Link>
+            </Button>
         </motion.div>
     );
 }
