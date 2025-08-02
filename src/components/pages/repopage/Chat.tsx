@@ -12,6 +12,7 @@ import siteConfig from '@/config/siteConfig';
 import Link from 'next/link';
 import Warning from './Warning';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useUser } from '@clerk/nextjs';
 
 // Define the message structure
 type Message = {
@@ -24,6 +25,7 @@ type ChatInterfaceProps = {
 };
 
 const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
+    const { isSignedIn, user } = useUser();
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
@@ -121,6 +123,8 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
             const response = await axios.post(`/api/chat`, {
                 message: userMessage.text,
                 chat_history: chatHistory,
+                isAuthenticated: isSignedIn,
+                userId: user?.id
             }, { withCredentials: true });
 
 

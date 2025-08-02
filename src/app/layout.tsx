@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import siteConfig from "@/config/siteConfig";
 import Navbar from "@/components/layout/Navbar";
+import { ClerkProvider } from '@clerk/nextjs';
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -24,22 +25,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.className} ${outfit.variable} antialiased`} suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.png" sizes="any" />
-      </head>
-      <body className="bg-background font-sans">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={`${GeistSans.className} ${outfit.variable} antialiased`} suppressHydrationWarning>
+        <head>
+          <link rel="icon" href="/favicon.png" sizes="any" />
+        </head>
+        <body className="bg-background font-sans">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

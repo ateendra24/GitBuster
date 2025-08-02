@@ -15,6 +15,7 @@ import RepoVisualizer from '@/components/pages/repopage/RepoVisualizer';
 import DependencyGraph from '@/components/pages/repopage/DependencyGraph';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -29,16 +30,26 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [error, setError] = useState('');
     const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph'>('Chat');
     const [repoData, setRepoData] = useState<any>(null);
+    const { isSignedIn, user, isLoaded } = useUser();
 
     console.log("repoData: ", repoData);
 
 
     useEffect(() => {
+        // Wait for auth to be loaded before making the request
+        if (!isLoaded) return;
+
         const fetchData = async () => {
+            console.log("Authentication status:", { isSignedIn, userId: user?.id, user, isLoaded });
+
             try {
                 const response = await axios.post(
                     `/api/process-repo`,
-                    { url },
+                    {
+                        url,
+                        isAuthenticated: isSignedIn,
+                        userId: user?.id
+                    },
                     {
                         withCredentials: true,
                         headers: {
@@ -60,7 +71,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
         };
 
         fetchData();
-    }, [url]);
+    }, [url, isLoaded, isSignedIn, user?.id]);
 
 
     if (loading) {
@@ -94,7 +105,6 @@ function Index({ username, repo }: { username: string, repo: string }) {
                 <SidebarProvider className="h-full w-full">
                     <AppSidebar setActiveView={setActiveView} activeView={activeView} username={username} repo={repo} />
                     <div className="flex-1 flex flex-col relative items-center justify-center w-full h-[100dvh] max-w-8xl mx-auto px-4 ">
-                        {/* <SideBarButtons /> */}
                         <RepoPageNavbar />
                         <section id='Chat' className={`h-full w-full ${activeView === 'Chat' ? 'block' : 'hidden'}`}>
                             <Chat url={url} />

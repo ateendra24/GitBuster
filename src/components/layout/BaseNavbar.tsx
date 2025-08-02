@@ -2,14 +2,16 @@
 
 import React from 'react'
 import { useTheme } from "next-themes"
-import { Ham, Menu, Moon, Sun } from 'lucide-react';
-import { RainbowButton } from '../magicui/rainbow-button';
+import { Menu, Moon, Sun } from 'lucide-react';
 import Link from 'next/link';
 import siteConfig from '@/config/siteConfig';
 import Github from '../icons/Github';
 import X from '../icons/X';
 import { motion } from 'framer-motion'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { SignInButton, SignOutButton, useClerk, useUser } from '@clerk/nextjs';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { RainbowButton } from '../magicui/rainbow-button';
 
 interface BaseNavbarProps {
     className?: string;
@@ -19,6 +21,8 @@ interface BaseNavbarProps {
 
 function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps) {
     const { setTheme, theme } = useTheme()
+    const { isSignedIn, user, isLoaded } = useUser()
+    const { signOut } = useClerk();
 
     const navbarData = [
         { name: 'About', href: '/about' },
@@ -46,27 +50,53 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                     ))}
                 </div>
 
-                <div className='flex items-center gap-1 md:gap-2'>
-                    {/* <a href={siteConfig.socialLinks.github} target='_blank' >
-                        <RainbowButton className='py-0 px-4 h-9 text-sm hidden lg:flex gap-2 items-center'>
-                            <Github color='black' /> Github
-                        </RainbowButton>
-                    </a> */}
 
-                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
+
+                <div className='flex items-center gap-1 md:gap-2'>
+                    {isLoaded && (
+                        user ? (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className='cursor-pointer'>
+                                    <Avatar className='w-7 h-7'>
+                                        <AvatarImage src={user?.imageUrl} alt={user?.firstName || ""} />
+                                        <AvatarFallback>{user?.firstName?.slice(0, 2)}</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className='mr-20'>
+                                    <DropdownMenuLabel >@{user?.username}</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    {/* <DropdownMenuItem className='px-4' ><Link href={'/dashboard'} className='text-base w-full'>Dashboard</Link> </DropdownMenuItem> */}
+                                    <DropdownMenuItem >
+                                        <a className='w-full cursor-pointer' onClick={() => signOut()}>
+                                            Log Out
+                                        </a>
+                                    </DropdownMenuItem>
+
+                                </DropdownMenuContent>
+                            </DropdownMenu>)
+                            : (
+                                <Link href='/sign-in'>
+                                    <RainbowButton className='py-0 px-2 md:px-4 h-9 text-sm flex gap-2 items-center'>
+                                        <Github color='black' /> Sign In
+                                    </RainbowButton>
+                                </Link>
+                            )
+                    )}
+
+                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-lg hidden md:inline-block'>
                         <X />
                     </a>
 
-                    <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
+                    <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-lg hidden md:inline-block'>
                         <Github />
                     </a>
 
                     {theme === "light" ? (
-                        <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
+                        <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-accent rounded-lg cursor-pointer'>
                             <Sun className="h-[22px] w-[22px]" strokeWidth={1.5} />
                         </button>
                     ) : (
-                        <button onClick={() => setTheme("light")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
+                        <button onClick={() => setTheme("light")} className='p-1.5 hover:bg-accent rounded-lg cursor-pointer'>
                             <Moon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                         </button>
                     )}
@@ -74,13 +104,13 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                     <div className='md:hidden'>
                         <DropdownMenu>
                             <DropdownMenuTrigger className='p-1.5 hover:bg-accent rounded-xl'><Menu /></DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent className='mr-6'>
                                 {navbarData.map((item, index) => (
                                     <DropdownMenuItem key={index} asChild>
                                         <Link href={item.href}>{item.name}</Link>
                                     </DropdownMenuItem>
                                 ))}
-                                <DropdownMenuItem asChild><a href={siteConfig.socialLinks.github} target='_blank'>Github</a></DropdownMenuItem>
+                                <DropdownMenuItem asChild><a href={siteConfig.socialLinks.github} target='_blank'>GitHub</a></DropdownMenuItem>
                                 <DropdownMenuItem asChild><a href={siteConfig.socialLinks.x} target='_blank'>X</a></DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

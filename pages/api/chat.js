@@ -7,7 +7,9 @@ const redis = new Redis({
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
 })
 
-const MAX_MESSAGES_PER_DAY = process.env.REPO_MAX_MESSAGES_PER_DAY
+// Tiered rate limits
+const AUTHENTICATED_MAX_MESSAGES = parseInt(process.env.AUTHENTICATED_MAX_MESSAGES_PER_DAY) || 100
+const UNAUTHENTICATED_MAX_MESSAGES = parseInt(process.env.UNAUTHENTICATED_MAX_MESSAGES_PER_DAY) || 30
 const ONE_DAY_SECONDS = 60 * 60 * 24 // 24 hours
 
 export default async function handler(req, res) {
@@ -15,28 +17,40 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    // Identify user by session_id if provided, else fallback to IP
-    const sessionId = req.body.session_id
-    const ip =
-        req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    // Check authentication status from client-provided info
+    const { isAuthenticated, userId } = req.body
+    const actuallyAuthenticated = !!(isAuthenticated && userId)
+
+    // Set rate limits based on authentication
+    const maxMessages = actuallyAuthenticated ? AUTHENTICATED_MAX_MESSAGES : UNAUTHENTICATED_MAX_MESSAGES
+
+    // Identify user - use IP-based key for all users (authenticated and unauthenticated)
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
         req.socket?.remoteAddress ||
         'unknown'
 
-    const userKey = sessionId ? `chat-limit:${sessionId}` : `chat-limit:${ip}`
+    const userKey = `chat-limit:${ip}`
 
     try {
         const current = await redis.get(userKey)
         const count = current ? parseInt(current) : 0
 
-        if (count >= MAX_MESSAGES_PER_DAY) {
-            return res.status(429).json({ message: `Daily chat limit reached (${MAX_MESSAGES_PER_DAY}).` })
+        if (count >= maxMessages) {
+            const tierInfo = actuallyAuthenticated ? 'authenticated user' : 'unauthenticated user'
+            return res.status(429).json({
+                message: `Daily chat limit reached (${maxMessages} for ${tierInfo}). ${!actuallyAuthenticated ? 'Sign in for higher limits!' : ''}`,
+                isAuthenticated: actuallyAuthenticated,
+                maxMessages,
+                currentCount: count
+            })
         }
 
         const newCount = await redis.incr(userKey)
         if (newCount === 1) {
             await redis.expire(userKey, ONE_DAY_SECONDS)
         }
-        console.log(`[RateLimit] ${userKey} => ${newCount}/${MAX_MESSAGES_PER_DAY}`)
+
+        console.log(`[RateLimit] ${actuallyAuthenticated ? 'AUTH' : 'UNAUTH'} ${userKey} => ${newCount}/${maxMessages}`)
 
     } catch (err) {
         console.error('[Redis Error]', err)
