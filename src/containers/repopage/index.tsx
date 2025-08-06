@@ -42,13 +42,28 @@ function Index({ username, repo }: { username: string, repo: string }) {
         const fetchData = async () => {
             console.log("Authentication status:", { isSignedIn, userId: user?.id, user, isLoaded });
 
+            // Extract GitHub access token from Clerk user object
+            let githubAccessToken: string | undefined = undefined;
+            if (isSignedIn && user?.externalAccounts) {
+                const githubAccount = user.externalAccounts.find(
+                    (acc: any) => acc.provider === 'oauth_github'
+                );
+                // Try to get the token from publicMetadata or unsafeMetadata
+                githubAccessToken = githubAccount?.publicMetadata?.accessToken || (githubAccount && (githubAccount as any).unsafeMetadata?.accessToken);
+                if (!githubAccessToken) {
+                    // For debugging: log the external account object
+                    console.warn('No GitHub access token found in externalAccounts:', githubAccount);
+                }
+            }
+
             try {
                 const response = await axios.post(
                     `/api/process-repo`,
                     {
                         url,
                         isAuthenticated: isSignedIn,
-                        userId: user?.id
+                        userId: user?.id,
+                        github_access_token: githubAccessToken,
                     },
                     {
                         withCredentials: true,
