@@ -32,7 +32,7 @@ export default function index() {
                         src="/mesh.png"
                         width={100}
                         height={50}
-                        className="fixed bottom-0 mx-auto w-[1000px] aspect-auto h-[100px] object-cover -z-10"
+                        className="fixed bottom-0 mx-auto w-full max-w-[1540px] aspect-auto h-[600px] object-cover md:object-fill -z-10"
                     />
                 </motion.div>
             </div>

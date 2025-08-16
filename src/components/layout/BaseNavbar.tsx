@@ -74,7 +74,7 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                     <div className='md:hidden'>
                         <DropdownMenu>
                             <DropdownMenuTrigger className='p-1.5 hover:bg-accent rounded-xl'><Menu /></DropdownMenuTrigger>
-                            <DropdownMenuContent>
+                            <DropdownMenuContent className='mr-3'>
                                 {navbarData.map((item, index) => (
                                     <DropdownMenuItem key={index} asChild>
                                         <Link href={item.href}>{item.name}</Link>

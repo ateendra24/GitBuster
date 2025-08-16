@@ -68,7 +68,7 @@ function InputSection() {
                         </div>
 
                         {error && (
-                            <p className="absolute text-sm text-red-500 -bottom-12 left-3">{error}</p>
+                            <p className="absolute text-sm text-red-500 -bottom-10 left-3">{error}</p>
                         )}
 
                         <Button

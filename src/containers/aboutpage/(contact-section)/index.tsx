@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MessageSquare, Github } from 'lucide-react'
 import siteConfig from '@/config/siteConfig'
+import X from '@/components/icons/X'
 
 function index() {
     const contactOptions = [
@@ -15,11 +16,11 @@ function index() {
             href: siteConfig.socialLinks.contact
         },
         {
-            icon: <Github className="w-6 h-6" />,
-            title: "GitHub",
-            description: "Check out our open-source project and contribute to its development.",
-            action: "View Repository",
-            href: siteConfig.socialLinks.github
+            icon: <X />,
+            title: "Feature Requests",
+            description: "Have an idea for a new feature? We'd love to hear it!",
+            action: "Submit Request",
+            href: siteConfig.socialLinks.x
         }
     ]
 

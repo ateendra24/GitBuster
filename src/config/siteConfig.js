@@ -1,5 +1,5 @@
 const siteConfig = {
-    siteName: "RepoAI",
+    siteName: "GitBuster",
     siteUrl: "",
     tagline: "GitHub Repo Analyzer",
     description: "Analyze any GitHub repository with AI. Input a repository URL, and chat with an AI assistant about the codebase.",

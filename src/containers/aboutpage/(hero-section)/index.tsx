@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import siteConfig from '@/config/siteConfig'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { Highlighter } from '@/components/magicui/highlighter'
 
 function index() {
     return (
@@ -17,8 +18,8 @@ function index() {
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     {siteConfig.siteName}
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Instantly chat with your codebase. Ask questions, get explanations, and explore your project with AI-powered assistance.
+                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                    Instantly  <Highlighter action="underline" padding={0} color="#FF9800">chat with your codebase</Highlighter>. Ask questions, get explanations, and explore your project with AI-powered assistance.
                 </p>
                 <div className="flex justify-center gap-4">
                     <Button asChild>

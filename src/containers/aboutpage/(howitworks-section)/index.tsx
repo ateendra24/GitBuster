@@ -2,6 +2,7 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 function index() {
     const steps = [
@@ -47,30 +48,21 @@ function index() {
 
                 <div className="flex flex-col gap-10">
                     {steps.map((step, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1 }}
-                            viewport={{ once: true }}
-                            className="relative"
-                        >
-                            <Card className="bg-background/60 border-muted backdrop-blur shadow-md hover:shadow-xl transition py-2">
-                                <CardContent className="p-3">
-                                    <div className="flex items-start gap-4">
-                                        <div className="relative">
-                                            <div className="text-4xl bg-background rounded-full p-2 shadow-sm">
-                                                {step.icon}
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2 flex-1">
-                                            <h4 className="text-xl font-semibold">{step.title}</h4>
-                                            <p className="text-muted-foreground">{step.desc}</p>
+                        <Card key={i} className="bg-background/60 border-muted backdrop-blur shadow-md hover:shadow-xl transition py-2">
+                            <CardContent className="p-3">
+                                <div className="flex items-start gap-4">
+                                    <div className="relative">
+                                        <div className="text-4xl bg-background rounded-full p-2 shadow-sm">
+                                            {step.icon}
                                         </div>
                                     </div>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
+                                    <div className="space-y-2 flex-1">
+                                        <h4 className="text-xl font-semibold">{step.title}</h4>
+                                        <p className="text-muted-foreground">{step.desc}</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </div>
@@ -80,14 +72,16 @@ function index() {
                     Ready to transform how you understand and work with code? Get started in minutes.
                 </p>
                 <div className="flex justify-center">
-                    <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition text-sm md:text-base"
-                    >
-                        Try It Now
-                        <ArrowRight className="w-4 h-4" />
-                    </motion.button>
+                    <Link href={'/'}>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="inline-flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 transition text-sm md:text-base"
+                        >
+                            Try It Now
+                            <ArrowRight className="w-4 h-4" />
+                        </motion.button>
+                    </Link>
                 </div>
             </div>
         </motion.section>
