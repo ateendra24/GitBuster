@@ -23,7 +23,7 @@ export default function CodeBlock({ value, language }: { value: string; language
     };
 
     return (
-        <div className="relative">
+        <div className="relative w-auto">
             <div className='bg-input p-2 rounded-t-md text-xs'>
                 {language}
             </div>

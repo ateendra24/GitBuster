@@ -31,7 +31,7 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className={`space-y-10 ${position} z-40 top-0 left-[50%] translate-x-[-50%] w-full max-w-full bg-opacity-50 backdrop-blur-3xl border-b shadow ${className}`}
+            className={`space-y-10 ${position} z-40 top-0 left-[50%] translate-x-[-50%] w-full max-w-full bg-opacity-50 backdrop-blur-2xl border-b shadow ${className}`}
         >
             <nav className={`relative w-[100%] max-w-[1440px] mx-auto py-3 px-6 flex justify-between items-center`}>
                 <div className='flex space-x-4 items-center'>
@@ -53,14 +53,6 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                         </RainbowButton>
                     </a> */}
 
-                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
-                        <X />
-                    </a>
-
-                    <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
-                        <Github />
-                    </a>
-
                     {theme === "light" ? (
                         <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
                             <Sun className="h-[22px] w-[22px]" strokeWidth={1.5} />
@@ -70,6 +62,14 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                             <Moon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                         </button>
                     )}
+
+                    <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
+                        <X />
+                    </a>
+
+                    <a href={siteConfig.socialLinks.github} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
+                        <Github />
+                    </a>
 
                     <div className='md:hidden'>
                         <DropdownMenu>

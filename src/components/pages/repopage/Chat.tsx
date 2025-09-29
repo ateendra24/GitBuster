@@ -3,7 +3,7 @@ import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
-import { ArrowUp, Square } from 'lucide-react';
+import { ArrowUp, Check, Copy, Square } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
@@ -57,7 +57,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
     // Scroll on new messages
     useEffect(() => {
         if (scrollTrigger === 'bottom') {
-            scrollToBottom()
+            scrollToBottomSmooth()
         } else if (scrollTrigger === 'top') {
             scrollToTop()
         }
@@ -152,9 +152,20 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
         await sendMessage(input);
     };
 
+    const [copied, setCopied] = useState(false);
+    const handleCopy = async (value: string) => {
+        try {
+            await navigator.clipboard.writeText(value);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset after 2s
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    };
+
 
     return (
-        <div className='mt-0 relative w-full h-full max-w-4xl mx-auto px-2'>
+        <div className='relative w-full h-full max-w-4xl mx-auto px-2'>
             <div ref={chatContainerRef} className="h-full pt-28 pb-40 max-h-dvh overflow-y-auto space-y-4 md:px-2">
                 {messages.length === 0 ? (
                     <div className="text-center text-gray-500 dark:text-gray-400 my-8">
@@ -168,46 +179,48 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         <div key={message.id} className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}>
                             <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
                                 {message.sender === 'ai' ? (
-                                    <MessageWrapper>
-                                        <div className="AI-message text-sm md:text-base space-y-6">
-                                            <ReactMarkdown
-                                                className='AI-message text-sm md:text-base space-y-6'
-                                                components={{
-                                                    code({ node, inline, className, children, ...props }) {
-                                                        const match = /language-(\w+)/.exec(className || "");
-                                                        return !inline && match ? (
-                                                            <CodeBlock
-                                                                language={match[1]}
-                                                                value={String(children).trim()}
-                                                            />
-                                                        ) : (
-                                                            <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
-                                                                {children}
-                                                            </code>
-                                                        );
-                                                    },
-                                                    a: ({ node, ...props }) => (
-                                                        <Tooltip>
-                                                            <TooltipTrigger> <a
-                                                                className="text-blue-400 hover:underline"
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                {...props}
-                                                            /></TooltipTrigger>
-                                                            <TooltipContent>
-                                                                <p>Open Link</p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    ),
-                                                }}
-                                            >
-                                                {message.text}
-                                            </ReactMarkdown>
-
-
-
-                                        </div>
-                                    </MessageWrapper>
+                                    <>
+                                        <MessageWrapper>
+                                            <div className="AI-message text-sm md:text-base">
+                                                <ReactMarkdown
+                                                    className='AI-message text-sm md:text-base space-y-6'
+                                                    components={{
+                                                        code({ node, inline, className, children, ...props }) {
+                                                            const match = /language-(\w+)/.exec(className || "");
+                                                            return !inline && match ? (
+                                                                <CodeBlock
+                                                                    language={match[1]}
+                                                                    value={String(children).trim()}
+                                                                />
+                                                            ) : (
+                                                                <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
+                                                                    {children}
+                                                                </code>
+                                                            );
+                                                        },
+                                                        a: ({ node, ...props }) => (
+                                                            <Tooltip>
+                                                                <TooltipTrigger> <a
+                                                                    className="text-blue-400 hover:underline"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    {...props}
+                                                                /></TooltipTrigger>
+                                                                <TooltipContent>
+                                                                    <p>Open Link</p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        ),
+                                                    }}
+                                                >
+                                                    {message.text}
+                                                </ReactMarkdown>
+                                                <button className='hover:bg-accent rounded-lg p-1.5 mt-2 cursor-pointer' onClick={() => handleCopy(message.text)}>
+                                                    {copied ? <Check size={15} /> : <Copy size={15} />}
+                                                </button>
+                                            </div>
+                                        </MessageWrapper>
+                                    </>
 
                                 ) : (
                                     <MessageWrapper>

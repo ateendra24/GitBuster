@@ -15,6 +15,7 @@ import RepoVisualizer from '@/components/pages/repopage/RepoVisualizer';
 import DependencyGraph from '@/components/pages/repopage/DependencyGraph';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import LoadingSection from './(loading-section)/index';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -65,19 +66,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
 
     if (loading) {
         return (
-            <motion.div
-                key="loading"
-                variants={fadeInVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="flex flex-col items-center justify-center h-full space-y-4 px-4"
-            >
-                <Circle className="animate-spin" />
-                <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 text-center">
-                    We are currently processing your Repo. Please wait...
-                </h2>
-            </motion.div>
+            <LoadingSection />
         );
     }
 
