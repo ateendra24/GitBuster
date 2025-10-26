@@ -201,7 +201,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                         a: ({ node, ...props }) => (
                                                             <Tooltip>
                                                                 <TooltipTrigger> <a
-                                                                    className="text-blue-400 hover:underline"
+                                                                    className="hover:underline"
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     {...props}

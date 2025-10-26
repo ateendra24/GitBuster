@@ -27,11 +27,11 @@ function index() {
                             Try It Now
                         </Link>
                     </Button>
-                    <Button variant={'secondary'} asChild>
+                    {/* <Button variant={'secondary'} asChild>
                         <Link href={siteConfig.socialLinks.github} >
                             View on GitHub
                         </Link>
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
 

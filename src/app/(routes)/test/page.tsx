@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import Chat from '@/components/pages/repopage/Chat';
+import RepoVisualizer from '@/components/pages/repopage/RepoVisualizer';
 
 function page() {
 
@@ -52,9 +53,12 @@ function page() {
 
         // </div>
 
-        <div className='w-full h-dvh'>
-            <Chat url={"https://github.com/ateendra24/blog"} />
-        </div>
+        // <div className='w-full h-dvh'>
+        //     <Chat url={"https://github.com/ateendra24/blog"} />
+        // </div>
+
+        <RepoVisualizer repoUrl={"https://github.com/ateendra24/realtime-chat-nextjs"} />
+
     )
 }
 
