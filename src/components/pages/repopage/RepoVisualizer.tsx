@@ -538,32 +538,30 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
 
     return (
         <div className="px-2 md:px-6 pt-20 pb-8 min-h-screen">
-            <div className="max-w-[1000px] mx-auto">
-                <div className="mb-6">
-                    <h2 className="text-3xl font-bold mb-2">Repository Visualization</h2>
-                    <p className="text-muted-foreground mb-4">
-                        Each circle represents a file or folder. Circle size indicates file size,
-                        and color represents file type.
-                    </p>
+            <div className="mb-6">
+                <h2 className="text-xl font-bold mb-2">Repository Visualization</h2>
+                <p className="text-muted-foreground mb-4">
+                    Each circle represents a file or folder. Circle size indicates file size,
+                    and color represents file type.
+                </p>
 
-                    <Input
-                        type="text"
-                        placeholder="Search files..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full max-w-[400px]"
-                    />
+                <Input
+                    type="text"
+                    placeholder="Search files..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full max-w-[400px]"
+                />
+            </div>
+
+            {error && (
+                <div className="text-destructive mb-6 p-4 border border-destructive/50 rounded-lg bg-destructive/10">
+                    {error}
                 </div>
+            )}
 
-                {error && (
-                    <div className="text-destructive mb-6 p-4 border border-destructive/50 rounded-lg bg-destructive/10">
-                        {error}
-                    </div>
-                )}
-
-                <div className="flex justify-center">
-                    <svg ref={svgRef}></svg>
-                </div>
+            <div className="flex justify-center">
+                <svg ref={svgRef}></svg>
             </div>
         </div>
     );
