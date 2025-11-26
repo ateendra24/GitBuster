@@ -1,43 +1,66 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import siteConfig from '@/config/siteConfig'
-import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { Highlighter } from '@/components/magicui/highlighter'
+import { DotPattern } from '@/components/magicui/dot-pattern'
+import { cn } from '@/lib/utils'
+import { RainbowButton } from '@/components/magicui/rainbow-button'
 
 function index() {
     return (
-        <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="relative min-h-[80vh] flex items-center justify-center overflow-hidden"
-        >
-            {/* Content */}
-            <div className="relative z-10 py-16 md:py-20 text-center space-y-8 max-w-4xl mx-auto px-4 md:px-6">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                    {siteConfig.siteName}
-                </h1>
-                <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                    Instantly  <Highlighter action="underline" padding={0} color="#FF9800">chat with your codebase</Highlighter>. Ask questions, get explanations, and explore your project with AI-powered assistance.
-                </p>
-                <div className="flex justify-center gap-4">
-                    <Button asChild>
-                        <Link href={'/'}>
-                            Try It Now
-                        </Link>
-                    </Button>
-                    {/* <Button variant={'secondary'} asChild>
-                        <Link href={siteConfig.socialLinks.github} >
-                            View on GitHub
-                        </Link>
-                    </Button> */}
-                </div>
+        <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background">
+            <DotPattern
+                width={20}
+                height={20}
+                cx={1}
+                cy={1}
+                cr={1}
+                className={cn(
+                    "[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] ",
+                )}
+            />
+
+            <div className="relative z-10 container px-4 md:px-6 flex flex-col items-center text-center space-y-8">
+
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter bg-gradient-to-b from-foreground to-foreground/50 bg-clip-text text-transparent max-w-4xl mx-auto"
+                >
+                    Chat with your <br className="hidden sm:block" />
+                    <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">Codebase</span>
+                </motion.h1>
+
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+                >
+                    Instantly analyze and understand any GitHub repository.
+                    Ask questions, get explanations, and explore your project with AI-powered assistance.
+                </motion.p>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="flex flex-col sm:flex-row gap-4 items-center"
+                >
+                    <Link href={'/'}>
+                        <RainbowButton>
+                            Get Started Free
+                        </RainbowButton>
+                    </Link>
+                    {/* <Link href={siteConfig.socialLinks.github} target="_blank" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors">
+                        View on GitHub <span aria-hidden="true">→</span>
+                    </Link> */}
+                </motion.div>
             </div>
 
             {/* Decorative Elements */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-        </motion.section>
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+        </section>
     )
 }
 

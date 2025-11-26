@@ -19,6 +19,11 @@ interface BaseNavbarProps {
 
 function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps) {
     const { setTheme, theme } = useTheme()
+    const [mounted, setMounted] = React.useState(false)
+
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const navbarData = [
         { name: 'About', href: '/about' },
@@ -53,15 +58,17 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                         </RainbowButton>
                     </a> */}
 
-                    {theme === "light" ? (
-                        <button onClick={() => setTheme("dark")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
-                            <Sun className="h-[22px] w-[22px]" strokeWidth={1.5} />
-                        </button>
-                    ) : (
-                        <button onClick={() => setTheme("light")} className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'>
+                    <button
+                        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                        className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'
+                        aria-label="Toggle theme"
+                    >
+                        {mounted && theme === "dark" ? (
                             <Moon className="h-[22px] w-[22px]" strokeWidth={1.5} />
-                        </button>
-                    )}
+                        ) : (
+                            <Sun className="h-[22px] w-[22px]" strokeWidth={1.5} />
+                        )}
+                    </button>
 
                     <a href={siteConfig.socialLinks.x} target='_blank' className='h-auto p-1.5 hover:bg-accent rounded-xl hidden md:inline-block'>
                         <X />

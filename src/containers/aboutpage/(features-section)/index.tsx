@@ -37,20 +37,27 @@ function index() {
     ]
 
     return (
-        <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="py-20 md:py-32 space-y-12 px-4 md:px-6"
-        >
-            <div className="text-center space-y-8 max-w-3xl mx-auto">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Powerful Features</h2>
-                <p className="text-lg md:text-xl text-muted-foreground">
+        <section className="py-20 md:py-32 px-4 md:px-6 bg-background relative overflow-hidden">
+            <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-3xl md:text-5xl font-bold tracking-tight"
+                >
+                    Powerful Features
+                </motion.h2>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-lg text-muted-foreground"
+                >
                     Everything you need to understand and analyze GitHub repositories, powered by advanced AI technology.
-                </p>
+                </motion.p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                 {features.map((feature, i) => (
                     <motion.div
                         key={i}
@@ -59,17 +66,17 @@ function index() {
                         transition={{ delay: i * 0.1 }}
                         className="h-full"
                     >
-                        <Card className="bg-background/60 border-muted backdrop-blur shadow-md hover:shadow-xl transition h-full group">
-                            <CardContent className="p-6 space-y-4">
-                                <div className="text-4xl">{feature.icon}</div>
-                                <h4 className="text-xl font-semibold">{feature.title}</h4>
-                                <p className="text-muted-foreground">{feature.desc}</p>
+                        <Card className="h-full bg-background/60 border-muted backdrop-blur shadow-sm hover:shadow-md transition-all duration-300">
+                            <CardContent className="p-6 flex flex-col items-start justify-start h-full">
+                                <div className="text-4xl mb-4">{feature.icon}</div>
+                                <h4 className="text-xl font-semibold mb-2">{feature.title}</h4>
+                                <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
                             </CardContent>
                         </Card>
                     </motion.div>
                 ))}
             </div>
-        </motion.section>
+        </section>
     )
 }
 

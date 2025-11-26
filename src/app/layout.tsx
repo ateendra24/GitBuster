@@ -14,8 +14,32 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: `${siteConfig.siteName} beta - ${siteConfig.tagline}`,
+  title: `${siteConfig.siteName} - ${siteConfig.tagline}`,
   description: siteConfig.description,
+  openGraph: {
+    title: siteConfig.siteName,
+    description: siteConfig.description,
+    url: siteConfig.siteUrl,
+    siteName: siteConfig.siteName,
+    images: [
+      {
+        url: `${siteConfig.siteUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.siteName} Open Graph Image`,
+      },
+    ],
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.siteName,
+    description: siteConfig.description,
+    images: [`${siteConfig.siteUrl}/og-image.png`],
+  },
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

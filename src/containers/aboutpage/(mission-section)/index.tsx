@@ -1,8 +1,8 @@
-import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
-import React from 'react'
+import { useTheme } from 'next-themes'
 
 function index() {
+    const { theme } = useTheme()
     const missionPoints = [
         {
             icon: "🎯",
@@ -22,40 +22,48 @@ function index() {
     ]
 
     return (
-        <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="py-20 md:py-32 space-y-12 px-4 md:px-6"
-        >
+        <section className="py-20 md:py-32 px-4 md:px-6">
             <div className="max-w-7xl mx-auto">
-                <div className="space-y-4 text-center max-w-3xl mx-auto">
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Our Mission</h2>
-                    <p className="text-lg md:text-xl text-muted-foreground">
+                <div className="space-y-4 text-center max-w-3xl mx-auto mb-16">
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="text-3xl md:text-5xl font-bold tracking-tight"
+                    >
+                        Our Mission
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="text-lg text-muted-foreground"
+                    >
                         We&apos;re revolutionizing how developers understand GitHub repositories by combining the power of AI with intuitive visualization tools.
-                    </p>
+                    </motion.p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-12">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     {missionPoints.map((point, i) => (
                         <motion.div
                             key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.1 }}
+                            className="h-full"
                         >
-                            <Card className="bg-background/60 h-full border-muted backdrop-blur shadow-md hover:shadow-xl transition">
-                                <CardContent className="p-6 space-y-4">
-                                    <div className="text-4xl">{point.icon}</div>
-                                    <h4 className="text-xl font-semibold">{point.title}</h4>
-                                    <p className="text-muted-foreground">{point.desc}</p>
-                                </CardContent>
-                            </Card>
+                            <div className="relative flex h-full w-full flex-col items-start justify-start overflow-hidden rounded-lg border bg-background">
+                                <div className="p-8 space-y-4 z-10">
+                                    <div className="text-4xl mb-2">{point.icon}</div>
+                                    <h4 className="text-xl font-bold">{point.title}</h4>
+                                    <p className="text-muted-foreground leading-relaxed">{point.desc}</p>
+                                </div>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
             </div>
-        </motion.section>
+        </section>
     )
 }
 

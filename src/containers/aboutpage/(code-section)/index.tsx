@@ -1,37 +1,50 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { ShineBorder } from '@/components/magicui/shine-border'
+import { useTheme } from 'next-themes'
 
 function index() {
+    const { theme } = useTheme()
 
     return (
-        <motion.section
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="py-20 md:py-32 space-y-12 px-4 md:px-6"
-        >
-            <div className="text-center space-y-8 max-w-3xl mx-auto">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">Code Visualization</h2>
-                <p className="text-lg md:text-xl text-muted-foreground">
+        <section className="py-20 md:py-32 px-4 md:px-6">
+            <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
+                <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-3xl md:text-5xl font-bold tracking-tight"
+                >
+                    Code Visualization
+                </motion.h2>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="text-lg text-muted-foreground"
+                >
                     Experience your codebase in a whole new way with our powerful visualization tools.
-                </p>
+                </motion.p>
             </div>
 
-            <div className="relative w-full max-w-3xl mx-auto">
-                <div className="hidden dark:block absolute inset-0 bg-gradient-to-t from-black/70 to-transparent rounded-lg z-10 pointer-events-none"></div>
-
-                <Image
-                    width={500}
-                    height={300}
-                    src="/visualize.png"
-                    alt="Code Visualization Dashboard"
-                    className="w-full h-auto rounded-lg z-0"
-                />
-            </div>
-
-
-        </motion.section>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="relative w-full max-w-5xl mx-auto"
+            >
+                <div className="relative flex w-full flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+                    <Image
+                        width={1200}
+                        height={675}
+                        src="/visualize.png"
+                        alt="Code Visualization Dashboard"
+                        className="w-full h-auto rounded-lg"
+                    />
+                </div>
+            </motion.div>
+        </section>
     )
 }
 
