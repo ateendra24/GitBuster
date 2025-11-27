@@ -3,7 +3,6 @@ import siteConfig from '@/config/siteConfig'
 import { cn } from '@/lib/utils'
 import { ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
-import React from 'react'
 
 function Introducing() {
     return (

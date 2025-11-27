@@ -1,11 +1,8 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { ShineBorder } from '@/components/magicui/shine-border'
 import { useTheme } from 'next-themes'
 
 function index() {
-    const { theme } = useTheme()
 
     return (
         <section className="py-20 md:py-32 px-4 md:px-6">

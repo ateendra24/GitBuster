@@ -2,8 +2,7 @@
 
 import React from 'react'
 import { useTheme } from "next-themes"
-import { Ham, Menu, Moon, Sun } from 'lucide-react';
-import { RainbowButton } from '../magicui/rainbow-button';
+import { Menu, Moon, Sun } from 'lucide-react';
 import Link from 'next/link';
 import siteConfig from '@/config/siteConfig';
 import Github from '../icons/Github';

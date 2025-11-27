@@ -1,6 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { motion } from 'framer-motion'
-import React from 'react'
 
 function index() {
     const features = [

@@ -9,7 +9,6 @@ import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
 import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import siteConfig from '@/config/siteConfig';
-import Link from 'next/link';
 import Warning from './Warning';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 

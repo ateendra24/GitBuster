@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import siteConfig from '@/config/siteConfig'
 import Link from 'next/link'
 import { DotPattern } from '@/components/magicui/dot-pattern'
 import { cn } from '@/lib/utils'

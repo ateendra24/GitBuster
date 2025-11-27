@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import React from 'react'
 import FileTree from './FolderStructure'
 import Details from './Details'
 

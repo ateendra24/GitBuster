@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
-import { useTheme } from 'next-themes'
 
 function index() {
-    const { theme } = useTheme()
     const missionPoints = [
         {
             icon: "🎯",

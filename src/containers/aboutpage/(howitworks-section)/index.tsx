@@ -1,7 +1,5 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
-import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { RainbowButton } from '@/components/magicui/rainbow-button'
 
