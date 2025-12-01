@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Redis } from '@upstash/redis'
 
 // Initialize Upstash Redis client
@@ -44,25 +43,53 @@ export default async function handler(req, res) {
     }
 
     try {
-        const backendRes = await axios.post(
-            `${process.env.BACKEND_URL}/chat`,
-            req.body,
+        // Set up SSE headers for streaming
+        res.setHeader('Content-Type', 'text/event-stream')
+        res.setHeader('Cache-Control', 'no-cache')
+        res.setHeader('Connection', 'keep-alive')
+        res.setHeader('X-Accel-Buffering', 'no')
+
+        const backendRes = await fetch(
+            `${process.env.BACKEND_URL}/chat/stream`,
             {
+                method: 'POST',
                 headers: {
                     Cookie: req.headers.cookie || '',
                     'Content-Type': 'application/json',
                 },
-                withCredentials: true,
+                body: JSON.stringify(req.body),
             }
         )
 
-        // ✅ Forward `Set-Cookie` from backend to browser if present
-        const setCookie = backendRes.headers['set-cookie']
+        if (!backendRes.ok) {
+            const errorData = await backendRes.json().catch(() => ({}))
+            return res.status(backendRes.status).json({
+                message: 'Error processing chat',
+                detail: errorData.detail || 'Unknown error',
+            })
+        }
+
+        // Forward Set-Cookie headers if present
+        const setCookie = backendRes.headers.get('set-cookie')
         if (setCookie) {
             res.setHeader('Set-Cookie', setCookie)
         }
 
-        return res.status(backendRes.status).json(backendRes.data)
+        // Stream the response
+        const reader = backendRes.body.getReader()
+        const decoder = new TextDecoder()
+
+        while (true) {
+            const { done, value } = await reader.read()
+            if (done) break
+
+            const chunk = decoder.decode(value, { stream: true })
+            res.write(chunk)
+            // Flush the response to ensure immediate delivery
+            if (res.flush) res.flush()
+        }
+
+        res.end()
     } catch (error) {
         console.error('Error chatting with repo:', error)
         return res.status(error.response?.status || 500).json({

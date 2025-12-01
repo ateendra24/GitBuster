@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
-import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
 import { ArrowUp, Check, Copy, Square } from 'lucide-react';
@@ -31,6 +31,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
     const [scrollTrigger, setScrollTrigger] = useState<'top' | 'bottom' | null>(null);
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
+    const [streamingMessageId, setStreamingMessageId] = useState<number | null>(null);
 
     // Scroll to bottom of chat
     const scrollToBottom = () => {
@@ -112,37 +113,103 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
         setInput('');
         setIsLoading(true);
 
+        // Create placeholder AI message for streaming
+        const aiMessageId = Date.now() + 1;
+        const aiMessage: Message = {
+            id: aiMessageId,
+            sender: 'ai',
+            text: '',
+        };
+        setMessages((prev) => [...prev, aiMessage]);
+        setStreamingMessageId(aiMessageId);
+
         try {
             const chatHistory = messages.map((msg) =>
                 msg.sender === 'human' ? { human: msg.text } : { ai: msg.text }
             );
 
-            const response = await axios.post(`/api/chat`, {
-                message: userMessage.text,
-                chat_history: chatHistory,
-            }, { withCredentials: true });
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: userMessage.text,
+                    chat_history: chatHistory,
+                }),
+                credentials: 'include',
+            });
 
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || 'Failed to send message');
+            }
 
-            const aiMessage: Message = {
-                id: Date.now() + 1,
-                sender: 'ai',
-                text: response.data.response,
-            };
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
 
-            setMessages((prev) => [...prev, aiMessage]);
+            if (!reader) {
+                throw new Error('No response body');
+            }
+
+            let accumulatedText = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const data = JSON.parse(line.slice(6));
+
+                            if (data.error) {
+                                throw new Error(data.error);
+                            }
+
+                            if (data.token) {
+                                accumulatedText += data.token;
+                                // Update the AI message with accumulated text
+                                setMessages((prev) =>
+                                    prev.map((msg) =>
+                                        msg.id === aiMessageId
+                                            ? { ...msg, text: accumulatedText }
+                                            : msg
+                                    )
+                                );
+                                // Don't auto-scroll during streaming - let user control scroll
+                            }
+
+                            if (data.done) {
+                                // Streaming complete
+                                break;
+                            }
+                        } catch (parseError) {
+                            // Skip invalid JSON lines
+                            if (line.trim() && !line.includes('session_id')) {
+                                console.warn('Failed to parse SSE data:', line);
+                            }
+                        }
+                    }
+                }
+            }
         } catch (error) {
             console.error('Error sending message:', error);
-            const errorMessage: Message = {
-                id: Date.now(),
-                sender: 'ai',
-                // text: 'Sorry, I encountered an error. Please try again.',
-                text: axios.isAxiosError(error) && error.response?.data?.message
-                    ? error.response?.data?.message
-                    : 'Sorry, I encountered an error. Please try again.',
-            };
-            setMessages((prev) => [...prev, errorMessage]);
+            const errorText = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.';
+            // Update the AI message with error
+            setMessages((prev) =>
+                prev.map((msg) =>
+                    msg.id === aiMessageId
+                        ? { ...msg, text: errorText }
+                        : msg
+                )
+            );
         } finally {
             setIsLoading(false);
+            setStreamingMessageId(null);
         }
     };
 
@@ -165,7 +232,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
     return (
         <div className='relative w-full h-full max-w-4xl mx-auto px-2'>
-            <div ref={chatContainerRef} className="h-full pt-28 pb-40 max-h-dvh overflow-y-auto space-y-4 md:px-2">
+            <div ref={chatContainerRef} className="h-full pt-28 pb-56 max-h-dvh overflow-y-auto space-y-4 md:px-2">
                 {messages.length === 0 ? (
                     <div className="text-center text-gray-500 dark:text-gray-400 my-8">
                         <p>Ask questions about the repository.</p>
@@ -174,67 +241,97 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         </p>
                     </div>
                 ) : (
-                    messages.map((message) => (
-                        <div key={message.id} className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}>
-                            <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
-                                {message.sender === 'ai' ? (
-                                    <>
-                                        <MessageWrapper>
-                                            <div className="AI-message text-sm md:text-base">
-                                                <ReactMarkdown
-                                                    className='AI-message text-sm md:text-base space-y-6'
-                                                    components={{
-                                                        code({ node, inline, className, children, ...props }) {
-                                                            const match = /language-(\w+)/.exec(className || "");
-                                                            return !inline && match ? (
-                                                                <CodeBlock
-                                                                    language={match[1]}
-                                                                    value={String(children).trim()}
-                                                                />
-                                                            ) : (
-                                                                <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
-                                                                    {children}
-                                                                </code>
-                                                            );
-                                                        },
-                                                        a: ({ node, ...props }) => (
-                                                            <Tooltip>
-                                                                <TooltipTrigger> <a
-                                                                    className="hover:underline"
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    {...props}
-                                                                /></TooltipTrigger>
-                                                                <TooltipContent>
-                                                                    <p>Open Link</p>
-                                                                </TooltipContent>
-                                                            </Tooltip>
-                                                        ),
-                                                    }}
+                    <AnimatePresence mode="popLayout">
+                        {messages.map((message) => (
+                            <motion.div
+                                key={message.id}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                                layout
+                                className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}
+                            >
+                                <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
+                                    {message.sender === 'ai' ? (
+                                        <>
+                                            <MessageWrapper>
+                                                <motion.div
+                                                    className={`AI-message text-sm md:text-base`}
+                                                    layout="position"
+                                                    transition={{ duration: 0.15, ease: "easeOut" }}
                                                 >
-                                                    {message.text}
-                                                </ReactMarkdown>
-                                                <button className='hover:bg-accent rounded-lg p-1.5 mt-2 cursor-pointer' onClick={() => handleCopy(message.text)}>
-                                                    {copied ? <Check size={15} /> : <Copy size={15} />}
-                                                </button>
-                                            </div>
+                                                    <ReactMarkdown
+                                                        className='AI-message text-sm md:text-base space-y-6'
+                                                        components={{
+                                                            code({ node, inline, className, children, ...props }) {
+                                                                const match = /language-(\w+)/.exec(className || "");
+                                                                return !inline && match ? (
+                                                                    <CodeBlock
+                                                                        language={match[1]}
+                                                                        value={String(children).trim()}
+                                                                    />
+                                                                ) : (
+                                                                    <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
+                                                                        {children}
+                                                                    </code>
+                                                                );
+                                                            },
+                                                            a: ({ node, ...props }) => (
+                                                                <Tooltip>
+                                                                    <TooltipTrigger> <a
+                                                                        className="hover:underline"
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        {...props}
+                                                                    /></TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>Open Link</p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            ),
+                                                        }}
+                                                    >
+                                                        {message.text}
+                                                    </ReactMarkdown>
+                                                    {/* {streamingMessageId === message.id && (
+                                                        <motion.span
+                                                            className="inline-block w-2 h-4 ml-1 bg-foreground/70 rounded-sm"
+                                                            animate={{ opacity: [1, 0, 1] }}
+                                                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                        />
+                                                    )} */}
+                                                    <AnimatePresence>
+                                                        {streamingMessageId !== message.id && message.text && (
+                                                            <motion.button
+                                                                initial={{ opacity: 0, scale: 0.8 }}
+                                                                animate={{ opacity: 1, scale: 1 }}
+                                                                exit={{ opacity: 0, scale: 0.8 }}
+                                                                transition={{ duration: 0.2 }}
+                                                                className='hover:bg-accent rounded-lg p-1.5 mt-2 cursor-pointer'
+                                                                onClick={() => handleCopy(message.text)}
+                                                            >
+                                                                {copied ? <Check size={15} /> : <Copy size={15} />}
+                                                            </motion.button>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </motion.div>
+                                            </MessageWrapper>
+                                        </>
+
+                                    ) : (
+                                        <MessageWrapper>
+                                            <p className='px-3'>{message.text}</p>
                                         </MessageWrapper>
-                                    </>
-
-                                ) : (
-                                    <MessageWrapper>
-                                        <p className='px-3'>{message.text}</p>
-                                    </MessageWrapper>
-                                )}
-                            </div>
-                        </div>
-                    ))
-
+                                    )}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
                 )}
                 {
-                    isLoading && (
-                        <div className='mb-32'>
-                            <AnimatedShinyText>Thinking Response...</AnimatedShinyText>
+                    isLoading && messages[messages.length - 1]?.text === '' && (
+                        <div>
+                            <AnimatedShinyText>Thinking...</AnimatedShinyText>
                         </div>
                     )
                 }

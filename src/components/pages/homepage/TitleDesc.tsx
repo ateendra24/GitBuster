@@ -1,4 +1,5 @@
 import siteConfig from '@/config/siteConfig'
+import React from 'react'
 import { Circle } from '../../icons/Circle'
 
 function TitleDesc() {
