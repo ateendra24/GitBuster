@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import siteConfig from "@/config/siteConfig";
 import Navbar from "@/components/layout/Navbar";
+import { Analytics } from "@vercel/analytics/next"
 
 const outfit = Outfit({
   subsets: ['latin'],
@@ -50,6 +51,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${GeistSans.className} ${outfit.variable} antialiased`} suppressHydrationWarning>
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PPMRMTH0HT"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-PPMRMTH0HT');
+            `,
+          }}
+        />
         <link rel="icon" href="/favicon.png" sizes="any" />
       </head>
       <body className="bg-background font-sans">
@@ -62,6 +75,7 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Toaster />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
