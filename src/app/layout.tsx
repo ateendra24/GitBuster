@@ -17,6 +17,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: `${siteConfig.siteName} - ${siteConfig.tagline}`,
   description: siteConfig.description,
+  keywords: siteConfig.keywords,
   openGraph: {
     title: siteConfig.siteName,
     description: siteConfig.description,
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     images: [`${siteConfig.siteUrl}/og-image.png`],
   },
   icons: {
-    icon: '/favicon.png',
+    icon: `${siteConfig.siteUrl}/favicon.png`,
   },
 };
 

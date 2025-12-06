@@ -3,6 +3,7 @@ const siteConfig = {
     siteUrl: "https://gitbuster.com",
     tagline: "GitHub Repo Analyzer",
     description: "Analyze any GitHub repository with AI. Input a repository URL, and chat with an AI assistant about the codebase.",
+    keywords: ["GitBuster", "GitHub Repo Analyzer", "AI Code Analysis", "Chat with Codebase", "AI Developer Assistant"],
     author: {
         name: "Ateendra",
     },
