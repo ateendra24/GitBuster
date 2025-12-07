@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🚀 GitBuster</h1>
+  <h1>GitBuster</h1>
   <p><strong>AI-Powered GitHub Repository Analyzer & Chat Assistant</strong></p>
   
   [![Next.js](https://img.shields.io/badge/Next.js-15.3-black?logo=next.js)](https://nextjs.org/)
@@ -20,20 +20,22 @@
 
 ---
 
-## 📖 About
+![Homepage](./public/og-image.png)
+
+## About
 
 **GitBuster** is an intelligent GitHub repository analyzer that leverages AI to help developers understand codebases faster. Simply paste a GitHub repository URL, and GitBuster will analyze the entire codebase, providing interactive visualizations, dependency graphs, and an AI-powered chat interface to answer questions about the code.
 
 Perfect for:
 
-- 🔍 **Code Review**: Quickly understand new repositories
-- 📚 **Learning**: Explore open-source projects with AI guidance
-- 🤝 **Onboarding**: Help new team members navigate large codebases
-- 🛠️ **Development**: Get instant answers about project structure and implementation
+- **Code Review**: Quickly understand new repositories
+- **Learning**: Explore open-source projects with AI guidance
+- **Onboarding**: Help new team members navigate large codebases
+- **Development**: Get instant answers about project structure and implementation
 
-## ✨ Features
+## Features
 
-### 🎯 Core Features
+### Core Features
 
 - **AI Chat Assistant**: Ask questions about any part of the codebase and get intelligent responses
 - **Repository Visualization**: Interactive 3D visualization of repository structure using D3.js
@@ -57,11 +59,7 @@ Perfect for:
 - **FAQ Section**: Comprehensive answers to common questions
 - **Cookie Policy**: Transparent data usage information
 
-## 🎬 Demo
-
-[Live Demo](https://gitbuster.com) | [Video Walkthrough](#)
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -118,7 +116,7 @@ npm run build
 npm run start
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend Framework
 
@@ -150,7 +148,7 @@ npm run start
 - **[TypeScript ESLint](https://typescript-eslint.io/)** - TypeScript linting
 - **[PostCSS](https://postcss.org/)** - CSS processing
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 front/
@@ -214,7 +212,7 @@ front/
 └── package.json                  # Dependencies
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Feature-Based Organization
 
@@ -236,7 +234,7 @@ The project follows a **feature-based architecture** where components are organi
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Accessibility**: ARIA labels and keyboard navigation support
 
-## 🎨 Key Components
+## Key Components
 
 ### Repository Analysis
 
@@ -259,7 +257,7 @@ The project follows a **feature-based architecture** where components are organi
 - **`Footer`**: Site footer with links
 - **`PageWrapper`**: Consistent page layout wrapper
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these steps:
 
@@ -286,11 +284,11 @@ Contributions are welcome! Please follow these steps:
 - Test thoroughly before submitting
 - Update documentation as needed
 
-## 📝 License
+## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## Author
 
 **Ateendra**
 
@@ -298,7 +296,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - GitHub: [@ateendra24](https://github.com/ateendra24)
 - LinkedIn: [ateendra24](https://www.linkedin.com/in/ateendra24)
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Next.js](https://nextjs.org/) for the amazing framework
 - [Vercel](https://vercel.com/) for hosting and deployment
@@ -306,7 +304,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 - [D3.js](https://d3js.org/) for powerful visualizations
 - All open-source contributors
 
-## 📧 Contact & Support
+## Contact & Support
 
 - **Feedback**: [Submit feedback](https://forms.gle/c97P7ov41tSL9nom8)
 - **Issues**: [GitHub Issues](https://github.com/ateendra24/gitbuster/issues)
@@ -315,6 +313,6 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 ---
 
 <div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/ateendra24">Ateendra</a></p>
-  <p>⭐ Star this repo if you find it helpful!</p>
+  <p>Made by <a href="https://github.com/ateendra24">Ateendra</a></p>
+  <p>Star this repo if you find it helpful</p>
 </div>
