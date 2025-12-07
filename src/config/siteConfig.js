@@ -10,7 +10,7 @@ const siteConfig = {
     themeColor: "#3498db",
     socialLinks: {
         x: "https://x.com/ateendra24",
-        github: "https://github.com/ateendra24",
+        github: "https://github.com/ateendra24/gitbuster",
         linkedIn: "https://www.linkedin.com/in/ateendra24",
         contact: "https://forms.gle/c97P7ov41tSL9nom8",
         instagram: "https://www.instagram.com/",
