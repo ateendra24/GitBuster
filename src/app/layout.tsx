@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: [`${siteConfig.siteUrl}/og-image.png`],
   },
   icons: {
-    icon: `${siteConfig.siteUrl}/favicon.png`,
+    icon: `${siteConfig.siteUrl}/favicon.ico`,
   },
 };
 
@@ -64,7 +64,6 @@ export default function RootLayout({
             `,
           }}
         />
-        <link rel="icon" href="/favicon.png" sizes="any" />
       </head>
       <body className="bg-background font-sans">
         <ThemeProvider
