@@ -537,7 +537,7 @@ const RepoVisualizer: React.FC<RepoVisualizerProps> = ({ repoUrl }) => {
     }, [data, searchQuery]);
 
     return (
-        <div className="px-2 md:px-6 pt-20 pb-8 min-h-screen">
+        <div className="px-2 md:px-6 pt-20 pb-8 min-h-screen h-full w-full overflow-y-auto">
             <div className="mb-6">
                 <h2 className="text-xl font-bold mb-2">Repository Visualization</h2>
                 <p className="text-muted-foreground mb-4">
