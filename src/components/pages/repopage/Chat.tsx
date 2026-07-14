@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
-import { ArrowUp, Check, Copy, Square } from 'lucide-react';
+import { ArrowUp, Check, Copy, Share2, Square } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
@@ -229,6 +229,25 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
         }
     };
 
+    const handleShare = async (text: string) => {
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'AI Code Response',
+                    text: text,
+                });
+            } else {
+                // Fallback: copy to clipboard
+                await handleCopy(text);
+            }
+        } catch (err) {
+            // User cancelled share or error
+            if ((err as Error).name !== 'AbortError') {
+                console.error('Failed to share:', err);
+            }
+        }
+    };
+
 
     return (
         <div className='relative w-full h-full max-w-4xl mx-auto px-2'>
@@ -300,20 +319,22 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                                         />
                                                     )} */}
-                                                    <AnimatePresence>
-                                                        {streamingMessageId !== message.id && message.text && (
-                                                            <motion.button
-                                                                initial={{ opacity: 0, scale: 0.8 }}
-                                                                animate={{ opacity: 1, scale: 1 }}
-                                                                exit={{ opacity: 0, scale: 0.8 }}
-                                                                transition={{ duration: 0.2 }}
-                                                                className='hover:bg-accent rounded-lg p-1.5 mt-2 cursor-pointer'
+                                                    {streamingMessageId !== message.id && message.text && (
+                                                        <div className='flex items-center gap-1 mt-2'>
+                                                            <button
+                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
                                                                 onClick={() => handleCopy(message.text)}
                                                             >
                                                                 {copied ? <Check size={15} /> : <Copy size={15} />}
-                                                            </motion.button>
-                                                        )}
-                                                    </AnimatePresence>
+                                                            </button>
+                                                            <button
+                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
+                                                                onClick={() => handleShare(message.text)}
+                                                            >
+                                                                <Share2 size={15} />
+                                                            </button>
+                                                        </div>
+                                                    )}
                                                 </motion.div>
                                             </MessageWrapper>
                                         </>
