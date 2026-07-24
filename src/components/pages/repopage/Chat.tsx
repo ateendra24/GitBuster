@@ -235,12 +235,12 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
         await sendMessage(input);
     };
 
-    const [copied, setCopied] = useState(false);
-    const handleCopy = async (value: string) => {
+    const [copiedId, setCopiedId] = useState<number | null>(null);
+    const handleCopy = async (id: number, value: string) => {
         try {
             await navigator.clipboard.writeText(value);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000); // Reset after 2s
+            setCopiedId(id);
+            setTimeout(() => setCopiedId(null), 2000); // Reset after 2s
         } catch (err) {
             console.error('Failed to copy:', err);
         }
@@ -254,8 +254,8 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                     text: text,
                 });
             } else {
-                // Fallback: copy to clipboard
-                await handleCopy(text);
+                // Fallback: copy to clipboard directly
+                await navigator.clipboard.writeText(text).catch(() => {});
             }
         } catch (err) {
             // User cancelled share or error
@@ -340,9 +340,9 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                         <div className='flex items-center gap-1 mt-2'>
                                                             <button
                                                                 className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
-                                                                onClick={() => handleCopy(message.text)}
+                                                                onClick={() => handleCopy(message.id, message.text)}
                                                             >
-                                                                {copied ? <Check size={15} /> : <Copy size={15} />}
+                                                                {copiedId === message.id ? <Check size={15} /> : <Copy size={15} />}
                                                             </button>
                                                             <button
                                                                 className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
