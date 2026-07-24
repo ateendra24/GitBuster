@@ -32,6 +32,14 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
     const [scrollTrigger, setScrollTrigger] = useState<'top' | 'bottom' | null>(null);
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
     const [streamingMessageId, setStreamingMessageId] = useState<number | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const stopStreaming = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+    };
 
     // Scroll to bottom of chat
     const scrollToBottom = () => {
@@ -128,6 +136,9 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 msg.sender === 'human' ? { human: msg.text } : { ai: msg.text }
             );
 
+            const controller = new AbortController();
+            abortControllerRef.current = controller;
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
@@ -138,6 +149,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                     chat_history: chatHistory,
                 }),
                 credentials: 'include',
+                signal: controller.signal,
             });
 
             if (!response.ok) {
@@ -197,17 +209,22 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 }
             }
         } catch (error) {
-            console.error('Error sending message:', error);
-            const errorText = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.';
-            // Update the AI message with error
-            setMessages((prev) =>
-                prev.map((msg) =>
-                    msg.id === aiMessageId
-                        ? { ...msg, text: errorText }
-                        : msg
-                )
-            );
+            // If user clicked stop, AbortError is expected — don't show an error message
+            if (error instanceof Error && error.name === 'AbortError') {
+                // Keep whatever text was streamed so far
+            } else {
+                console.error('Error sending message:', error);
+                const errorText = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.';
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        msg.id === aiMessageId
+                            ? { ...msg, text: errorText }
+                            : msg
+                    )
+                );
+            }
         } finally {
+            abortControllerRef.current = null;
             setIsLoading(false);
             setStreamingMessageId(null);
         }
@@ -399,11 +416,12 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         maxLength={500}
                     />
                     <Button
-                        type="submit"
+                        type={isLoading ? 'button' : 'submit'}
                         className="w-fit absolute bottom-14 right-2 rounded-full cursor-pointer"
-                        disabled={isLoading || input.length <= 1}
+                        disabled={!isLoading && input.length <= 1}
+                        onClick={isLoading ? stopStreaming : undefined}
                     >
-                        {isLoading ? (<Square fill='currentColor' size={1} />) : (<ArrowUp size={1} />)}
+                        {isLoading ? (<Square fill='currentColor' size={16} />) : (<ArrowUp size={16} />)}
                     </Button>
                     <QuickActions sendMessage={sendMessage} isLoading={isLoading} />
 
