@@ -255,7 +255,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 });
             } else {
                 // Fallback: copy to clipboard directly
-                await navigator.clipboard.writeText(text).catch(() => {});
+                await navigator.clipboard.writeText(text).catch(() => { });
             }
         } catch (err) {
             // User cancelled share or error
@@ -268,7 +268,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
     return (
         <div className='relative w-full h-full max-w-4xl mx-auto px-2'>
-            <div ref={chatContainerRef} className="h-full pt-28 pb-56 max-h-dvh overflow-y-auto space-y-4 md:px-2">
+            <div ref={chatContainerRef} className="h-full pt-28 pb-56 max-h-dvh overflow-y-auto md:px-2">
                 {messages.length === 0 ? (
                     <div className="text-center text-gray-500 dark:text-gray-400 my-8">
                         <p>Ask questions about the repository.</p>
@@ -285,7 +285,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 0.4, ease: "easeOut" }}
                                 layout
-                                className={`flex ${message.sender === 'human' ? 'justify-end' : 'justify-start'} `}
+                                className={`flex ${message.sender === 'human' ? 'justify-end pb-8' : 'justify-start pb-4'} group`}
                             >
                                 <div className={`rounded-xl py-2 ${message.sender === 'human' ? 'bg-accent rounded-full max-w-[60%] ' : 'max-w-[90%] '}`}>
                                     {message.sender === 'ai' ? (
@@ -357,9 +357,25 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                         </>
 
                                     ) : (
-                                        <MessageWrapper>
-                                            <p className='px-3'>{message.text}</p>
-                                        </MessageWrapper>
+                                        <div className='relative'>
+                                            <MessageWrapper>
+                                                <p className='px-3'>{message.text}</p>
+                                            </MessageWrapper>
+                                            <div className='hidden group-hover:flex items-center gap-1 mt-4 absolute right-0'>
+                                                <button
+                                                    className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
+                                                    onClick={() => handleCopy(message.id, message.text)}
+                                                >
+                                                    {copiedId === message.id ? <Check size={12} /> : <Copy size={12} />}
+                                                </button>
+                                                <button
+                                                    className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
+                                                    onClick={() => handleShare(message.text)}
+                                                >
+                                                    <Share2 size={12} />
+                                                </button>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </motion.div>
@@ -412,7 +428,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         }}
                         placeholder="Ask about the repository..."
                         className='w-full min-h-10 h-full max-h-40 bg-white/30 dark:bg-[#2f2f2f]/30 border shadow-md rounded-3xl px-6 py-4 !text-base pr-12 resize-none'
-                        disabled={isLoading}
+                        // disabled={isLoading}
                         maxLength={500}
                     />
                     <Button
