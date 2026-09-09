@@ -14,32 +14,40 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    // Identify user by session_id if provided, else fallback to IP
-    const sessionId = req.body.session_id
-    const ip =
-        req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-        req.socket?.remoteAddress ||
-        'unknown'
+    const customApiKey = req.headers['x-custom-api-key'] || req.body?.custom_api_key
 
-    const userKey = sessionId ? `chat-limit:${sessionId}` : `chat-limit:${ip}`
+    // Only apply rate limit if no custom API key is provided
+    if (!customApiKey || (typeof customApiKey === 'string' && !customApiKey.trim())) {
+        // Identify user by session_id if provided, else fallback to IP
+        const sessionId = req.body.session_id
+        const ip =
+            req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+            req.socket?.remoteAddress ||
+            'unknown'
 
-    try {
-        const current = await redis.get(userKey)
-        const count = current ? parseInt(current) : 0
+        const userKey = sessionId ? `chat-limit:${sessionId}` : `chat-limit:${ip}`
 
-        if (count >= MAX_MESSAGES_PER_DAY) {
-            return res.status(429).json({ message: `Daily chat limit reached (${MAX_MESSAGES_PER_DAY}).` })
+        try {
+            const current = await redis.get(userKey)
+            const count = current ? parseInt(current) : 0
+
+            if (count >= MAX_MESSAGES_PER_DAY) {
+                return res.status(429).json({ 
+                    message: `Daily chat limit reached (${MAX_MESSAGES_PER_DAY}). Add your own Gemini API key to bypass this limit!`,
+                    isRateLimit: true,
+                })
+            }
+
+            const newCount = await redis.incr(userKey)
+            if (newCount === 1) {
+                await redis.expire(userKey, ONE_DAY_SECONDS)
+            }
+            console.log(`[RateLimit] ${userKey} => ${newCount}/${MAX_MESSAGES_PER_DAY}`)
+
+        } catch (err) {
+            console.error('[Redis Error]', err)
+            // Optional: let request continue if Redis fails
         }
-
-        const newCount = await redis.incr(userKey)
-        if (newCount === 1) {
-            await redis.expire(userKey, ONE_DAY_SECONDS)
-        }
-        console.log(`[RateLimit] ${userKey} => ${newCount}/${MAX_MESSAGES_PER_DAY}`)
-
-    } catch (err) {
-        console.error('[Redis Error]', err)
-        // Optional: let request continue if Redis fails
     }
 
     try {
@@ -49,6 +57,11 @@ export default async function handler(req, res) {
         res.setHeader('Connection', 'keep-alive')
         res.setHeader('X-Accel-Buffering', 'no')
 
+        const payload = {
+            ...req.body,
+            ...(customApiKey ? { custom_api_key: customApiKey } : {})
+        }
+
         const backendRes = await fetch(
             `${process.env.BACKEND_URL}/chat/stream`,
             {
@@ -57,7 +70,7 @@ export default async function handler(req, res) {
                     Cookie: req.headers.cookie || '',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(req.body),
+                body: JSON.stringify(payload),
             }
         )
 

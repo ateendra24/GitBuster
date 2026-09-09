@@ -15,28 +15,36 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' })
     }
 
-    const ip =
-        req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
-        req.socket?.remoteAddress ||
-        'unknown'
+    const customApiKey = req.headers['x-custom-api-key'] || req.body?.custom_api_key
 
-    const key = `ratelimit:${ip}`
+    // Only apply rate limit if no custom API key is provided
+    if (!customApiKey || (typeof customApiKey === 'string' && !customApiKey.trim())) {
+        const ip =
+            req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+            req.socket?.remoteAddress ||
+            'unknown'
 
-    try {
-        const current = await redis.get(key)
-        const count = current ? parseInt(current) : 0
+        const key = `ratelimit:${ip}`
 
-        if (count >= MAX_REQUESTS) {
-            return res.status(429).json({ message: `You can only process ${MAX_REQUESTS} repos per day.` })
+        try {
+            const current = await redis.get(key)
+            const count = current ? parseInt(current) : 0
+
+            if (count >= MAX_REQUESTS) {
+                return res.status(429).json({ 
+                    message: `You can only process ${MAX_REQUESTS} repos per day. Add your own Gemini API key to bypass this limit!`,
+                    isRateLimit: true,
+                })
+            }
+
+            await redis.incr(key)
+            if (count === 0) {
+                await redis.expire(key, WINDOW_SECONDS)
+            }
+        } catch (err) {
+            console.error('[Upstash Redis Error]', err)
+            // Optionally allow request if Redis fails
         }
-
-        await redis.incr(key)
-        if (count === 0) {
-            await redis.expire(key, WINDOW_SECONDS)
-        }
-    } catch (err) {
-        console.error('[Upstash Redis Error]', err)
-        // Optionally allow request if Redis fails
     }
 
     try {

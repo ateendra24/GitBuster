@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTheme } from "next-themes"
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Menu, Moon, Sun, Key } from 'lucide-react';
 import Link from 'next/link';
 import siteConfig from '@/config/siteConfig';
 import Github from '../icons/Github';
 import X from '../icons/X';
 import { motion } from 'framer-motion'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import ApiKeyModal from '../common/ApiKeyModal';
+import { getStoredApiKey, API_KEY_EVENT } from '@/lib/apiKey';
 
 interface BaseNavbarProps {
     className?: string;
@@ -19,9 +21,17 @@ interface BaseNavbarProps {
 function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps) {
     const { setTheme, theme } = useTheme()
     const [mounted, setMounted] = React.useState(false)
+    const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false)
+    const [hasApiKey, setHasApiKey] = useState(false)
 
     React.useEffect(() => {
         setMounted(true)
+        const checkKey = () => {
+            setHasApiKey(Boolean(getStoredApiKey()));
+        };
+        checkKey();
+        window.addEventListener(API_KEY_EVENT, checkKey);
+        return () => window.removeEventListener(API_KEY_EVENT, checkKey);
     }, [])
 
     const navbarData = [
@@ -58,6 +68,21 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                     </a> */}
 
                     <button
+                        onClick={() => setApiKeyModalOpen(true)}
+                        className={`relative p-1.5 hover:bg-accent rounded-xl cursor-pointer flex items-center gap-1.5 transition-colors ${hasApiKey ? 'text-foreground font-medium' : 'opacity-70 hover:opacity-100'}`}
+                        title={hasApiKey ? 'Custom Gemini API Key Active' : 'Configure Gemini API Key'}
+                        aria-label="Configure Gemini API Key"
+                    >
+                        <Key className="h-[20px] w-[20px]" strokeWidth={1.5} />
+                        {hasApiKey && (
+                            <span className="relative flex h-2 w-2 -ml-0.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                        )}
+                    </button>
+
+                    <button
                         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                         className='p-1.5 hover:bg-accent rounded-xl cursor-pointer'
                         aria-label="Toggle theme"
@@ -81,6 +106,10 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                         <DropdownMenu>
                             <DropdownMenuTrigger className='p-1.5 hover:bg-accent rounded-xl'><Menu /></DropdownMenuTrigger>
                             <DropdownMenuContent className='mr-3'>
+                                <DropdownMenuItem onClick={() => setApiKeyModalOpen(true)} className="flex items-center justify-between cursor-pointer">
+                                    <span className="flex items-center gap-2"><Key className="w-4 h-4" /> API Key</span>
+                                    {hasApiKey && <span className="h-2 w-2 rounded-full bg-emerald-500" />}
+                                </DropdownMenuItem>
                                 {navbarData.map((item, index) => (
                                     <DropdownMenuItem key={index} asChild>
                                         <Link href={item.href}>{item.name}</Link>
@@ -92,9 +121,10 @@ function BaseNavbar({ className, children, position = 'fixed' }: BaseNavbarProps
                         </DropdownMenu>
                     </div>
 
-
                 </div>
             </nav>
+
+            <ApiKeyModal open={apiKeyModalOpen} onOpenChange={setApiKeyModalOpen} />
         </motion.section>
     )
 }

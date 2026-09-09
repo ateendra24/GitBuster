@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
-import { ArrowUp, Check, Copy, Share2, Square } from 'lucide-react';
+import { ArrowUp, Check, Copy, Share2, Square, Key } from 'lucide-react';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,8 @@ import { AnimatedShinyText } from '@/components/magicui/animated-shiny-text';
 import siteConfig from '@/config/siteConfig';
 import Warning from './Warning';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import ApiKeyModal from '@/components/common/ApiKeyModal';
+import { getStoredApiKey, API_KEY_EVENT } from '@/lib/apiKey';
 
 // Define the message structure
 type Message = {
@@ -33,6 +35,17 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
     const [showScrollToBottom, setShowScrollToBottom] = useState(false);
     const [streamingMessageId, setStreamingMessageId] = useState<number | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
+    const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
+    const [hasApiKey, setHasApiKey] = useState(false);
+
+    useEffect(() => {
+        const updateKey = () => {
+            setHasApiKey(Boolean(getStoredApiKey()));
+        };
+        updateKey();
+        window.addEventListener(API_KEY_EVENT, updateKey);
+        return () => window.removeEventListener(API_KEY_EVENT, updateKey);
+    }, []);
 
     const stopStreaming = () => {
         if (abortControllerRef.current) {
@@ -139,14 +152,18 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
             const controller = new AbortController();
             abortControllerRef.current = controller;
 
+            const customApiKey = getStoredApiKey();
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(customApiKey ? { 'x-custom-api-key': customApiKey } : {}),
                 },
                 body: JSON.stringify({
                     message: userMessage.text,
                     chat_history: chatHistory,
+                    custom_api_key: customApiKey || undefined,
                 }),
                 credentials: 'include',
                 signal: controller.signal,
@@ -154,6 +171,9 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                if (response.status === 429 || errorData.isRateLimit) {
+                    setApiKeyModalOpen(true);
+                }
                 throw new Error(errorData.message || 'Failed to send message');
             }
 
@@ -175,10 +195,21 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
                 for (const line of lines) {
                     if (line.startsWith('data: ')) {
+                        let data: any = null;
                         try {
-                            const data = JSON.parse(line.slice(6));
+                            data = JSON.parse(line.slice(6));
+                        } catch (parseError) {
+                            if (line.trim() && !line.includes('session_id')) {
+                                console.warn('Failed to parse SSE data:', line);
+                            }
+                            continue;
+                        }
 
+                        if (data) {
                             if (data.error) {
+                                if (data.error.includes('API Key') || data.error.includes('Quota') || data.error.includes('No API Key Provided')) {
+                                    setApiKeyModalOpen(true);
+                                }
                                 throw new Error(data.error);
                             }
 
@@ -192,17 +223,10 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                             : msg
                                     )
                                 );
-                                // Don't auto-scroll during streaming - let user control scroll
                             }
 
                             if (data.done) {
-                                // Streaming complete
                                 break;
-                            }
-                        } catch (parseError) {
-                            // Skip invalid JSON lines
-                            if (line.trim() && !line.includes('session_id')) {
-                                console.warn('Failed to parse SSE data:', line);
                             }
                         }
                     }
@@ -443,11 +467,23 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
 
                 </form>
 
-                <div className="text-center text-xs text-gray-500 dark:text-gray-400 px-4">
-                    {siteConfig.siteName} can make mistakes. Check important info.
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground px-4 py-1">
+                    <span>{siteConfig.siteName} can make mistakes. Check important info.</span>
+                    <button
+                        type="button"
+                        onClick={() => setApiKeyModalOpen(true)}
+                        className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors cursor-pointer font-medium"
+                        title={hasApiKey ? 'Custom Gemini API Key Active (Rate limits bypassed)' : 'Use your own Gemini API Key to bypass limits'}
+                    >
+                        <Key className="w-3.5 h-3.5 text-primary" />
+                        <span>{hasApiKey ? 'Custom Key Active' : 'Use Own API Key'}</span>
+                        {hasApiKey && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />}
+                    </button>
                 </div>
 
             </div>
+
+            <ApiKeyModal open={apiKeyModalOpen} onOpenChange={setApiKeyModalOpen} />
         </div >
     );
 };

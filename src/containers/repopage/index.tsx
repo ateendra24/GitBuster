@@ -1,9 +1,9 @@
 "use client"
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Info } from 'lucide-react';
+import { Info, Key } from 'lucide-react';
 import { Circle } from '../../components/icons/Circle';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
@@ -16,6 +16,8 @@ import DependencyGraph from '@/components/pages/repopage/DependencyGraph';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import LoadingSection from './(loading-section)/index';
+import ApiKeyModal from '@/components/common/ApiKeyModal';
+import { getStoredApiKey, API_KEY_EVENT } from '@/lib/apiKey';
 
 const fadeInVariants = {
     initial: { opacity: 0 },
@@ -30,38 +32,55 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [error, setError] = useState('');
     const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph'>('Chat');
     const [repoData, setRepoData] = useState<any>(null);
+    const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
+    const [isRateLimited, setIsRateLimited] = useState(false);
 
     console.log("repoData: ", repoData);
 
+    const fetchData = useCallback(async () => {
+        setLoading(true);
+        setError('');
+        setIsRateLimited(false);
+        try {
+            const customApiKey = getStoredApiKey();
+            const response = await axios.post(
+                `/api/process-repo`,
+                { url, custom_api_key: customApiKey || undefined },
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(customApiKey ? { 'x-custom-api-key': customApiKey } : {}),
+                    },
+                }
+            );
+            if (response.status === 200) {
+                setProcessed(true);
+                setRepoData(response.data);
+            }
+        } catch (error: any) {
+            console.error('Error processing repository:', error);
+            const isLimit = error?.response?.status === 429 || error?.response?.data?.isRateLimit;
+            if (isLimit) {
+                setIsRateLimited(true);
+            }
+            toast.error(error?.response?.data?.message || 'Error processing repository');
+            setError(error?.response?.data?.message || error?.response?.data?.detail || 'Error processing repository');
+        } finally {
+            setLoading(false);
+        }
+    }, [url]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.post(
-                    `/api/process-repo`,
-                    { url },
-                    {
-                        withCredentials: true,
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-                if (response.status === 200) {
-                    setProcessed(true);
-                    setRepoData(response.data);
-                }
-            } catch (error: any) {
-                console.error('Error processing repository:', error);
-                toast.error(error?.response?.data?.message || 'Error processing repository');
-                setError(error?.response?.data?.detail || 'Error processing repository');
-            } finally {
-                setLoading(false);
-            }
+        fetchData();
+
+        const handleKeyChange = () => {
+            fetchData();
         };
 
-        fetchData();
-    }, [url]);
+        window.addEventListener(API_KEY_EVENT, handleKeyChange);
+        return () => window.removeEventListener(API_KEY_EVENT, handleKeyChange);
+    }, [fetchData]);
 
 
     if (loading) {
@@ -115,17 +134,29 @@ function Index({ username, repo }: { username: string, repo: string }) {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex flex-col items-center justify-center h-full space-y-4 px-4"
+            className="flex flex-col items-center justify-center h-full space-y-4 px-4 text-center"
         >
-            <Info className="h-12 w-12 text-red-500" />
-            <p className="text-base text-center font-semibold max-w-md">
+            <Info className="h-12 w-12 text-destructive" />
+            <p className="text-base font-semibold max-w-md">
                 {error.startsWith("Failed") ? "An unexpected error occurred." : error}
             </p>
-            <Button variant="default" asChild>
-                <Link href="/">
-                    Home
-                </Link>
-            </Button>
+            {isRateLimited && (
+                <p className="text-xs text-muted-foreground max-w-sm">
+                    You can bypass daily repository processing limits by providing your own free Gemini API key.
+                </p>
+            )}
+            <div className="flex flex-wrap gap-2 items-center justify-center pt-2">
+                <Button variant="default" onClick={() => setApiKeyModalOpen(true)} className="gap-1.5 cursor-pointer">
+                    <Key className="w-4 h-4" />
+                    Configure Gemini API Key
+                </Button>
+                <Button variant="outline" asChild>
+                    <Link href="/">
+                        Home
+                    </Link>
+                </Button>
+            </div>
+            <ApiKeyModal open={apiKeyModalOpen} onOpenChange={setApiKeyModalOpen} />
         </motion.div>
     );
 }
