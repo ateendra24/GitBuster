@@ -98,6 +98,7 @@ export default function ApiKeyModal({ open, onOpenChange }: ApiKeyModalProps) {
                                     {maskedKey}
                                 </code>
                                 <Button
+                                    type="button"
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleRemove}
@@ -133,6 +134,7 @@ export default function ApiKeyModal({ open, onOpenChange }: ApiKeyModalProps) {
                                 className="pr-10 font-mono text-sm"
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
+                                        e.preventDefault();
                                         handleSave();
                                     }
                                 }}
@@ -162,10 +164,10 @@ export default function ApiKeyModal({ open, onOpenChange }: ApiKeyModalProps) {
                 </div>
 
                 <DialogFooter className="gap-2">
-                    <Button variant="outline" onClick={() => onOpenChange(false)} className='rounded-lg cursor-pointer'>
+                    <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className='rounded-lg cursor-pointer'>
                         Cancel
                     </Button>
-                    <Button onClick={handleSave} disabled={!apiKey.trim()} className="gap-1.5 rounded-lg cursor-pointer">
+                    <Button type="button" onClick={handleSave} disabled={!apiKey.trim()} className="gap-1.5 rounded-lg cursor-pointer">
                         <Check className="w-4 h-4" />
                         {hasKey ? 'Update Key' : 'Save Key'}
                     </Button>

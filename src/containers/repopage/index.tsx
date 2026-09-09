@@ -1,6 +1,6 @@
 "use client"
 import axios from 'axios';
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Info, Key } from 'lucide-react';
@@ -34,6 +34,17 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const [repoData, setRepoData] = useState<any>(null);
     const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
     const [isRateLimited, setIsRateLimited] = useState(false);
+
+    const processedRef = useRef(false);
+    const isRateLimitedRef = useRef(false);
+
+    useEffect(() => {
+        processedRef.current = processed;
+    }, [processed]);
+
+    useEffect(() => {
+        isRateLimitedRef.current = isRateLimited;
+    }, [isRateLimited]);
 
     console.log("repoData: ", repoData);
 
@@ -74,8 +85,13 @@ function Index({ username, repo }: { username: string, repo: string }) {
     useEffect(() => {
         fetchData();
 
-        const handleKeyChange = () => {
-            fetchData();
+        const handleKeyChange = (e: Event) => {
+            const customEvent = e as CustomEvent<string>;
+            const newKey = customEvent.detail;
+            // Only re-fetch if repository was NOT processed yet and failed due to rate limits
+            if (!processedRef.current && isRateLimitedRef.current && Boolean(newKey)) {
+                fetchData();
+            }
         };
 
         window.addEventListener(API_KEY_EVENT, handleKeyChange);
