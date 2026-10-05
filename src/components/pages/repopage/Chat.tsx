@@ -16,6 +16,7 @@ import Warning from './Warning';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import ApiKeyModal from '@/components/common/ApiKeyModal';
 import { getStoredApiKey, API_KEY_EVENT } from '@/lib/apiKey';
+import { ThinkingOrb } from 'thinking-orbs';
 
 // Define the message structure
 type Message = {
@@ -413,7 +414,8 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 )}
                 {
                     isLoading && messages[messages.length - 1]?.text === '' && (
-                        <div>
+                        <div className='flex w-fit gap-2 items-center'>
+                            <ThinkingOrb state="listening" size={32} />
                             <AnimatedShinyText>Thinking...</AnimatedShinyText>
                         </div>
                     )
