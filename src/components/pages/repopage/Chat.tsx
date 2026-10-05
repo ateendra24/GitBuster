@@ -324,14 +324,14 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                     layout="position"
                                                     transition={{ duration: 0.15, ease: "easeOut" }}
                                                 >
+                                                    <div className='AI-message text-sm md:text-base space-y-6'>
                                                     <ReactMarkdown
-                                                        className='AI-message text-sm md:text-base space-y-6'
                                                         remarkPlugins={[remarkMath]}
                                                         rehypePlugins={[rehypeKatex]}
                                                         components={{
-                                                            code({ node, inline, className, children, ...props }) {
+                                                            code({ node, className, children, ...props }) {
                                                                 const match = /language-(\w+)/.exec(className || "");
-                                                                return !inline && match ? (
+                                                                return match ? (
                                                                     <CodeBlock
                                                                         language={match[1]}
                                                                         value={String(children).trim()}
@@ -359,6 +359,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                     >
                                                         {message.text}
                                                     </ReactMarkdown>
+                                                    </div>
                                                     {/* {streamingMessageId === message.id && (
                                                         <motion.span
                                                             className="inline-block w-2 h-4 ml-1 bg-foreground/70 rounded-sm"
