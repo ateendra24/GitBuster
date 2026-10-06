@@ -65,14 +65,14 @@ export default function Index() {
                     <HeroSection />
                     <InputSection />
 
-                    <div className="fixed bottom-0 mx-auto w-full max-w-[1540px] pointer-events-none -z-10 overflow-hidden">
+                    <div className="fixed bottom-0 mx-auto w-full pointer-events-none -z-10 overflow-hidden">
                         <VoiceBeam
                             type="mobile"
                             colorVariant="colorful"
                             theme="auto"
                             level={() => meter.current}
                             scale={1.6}
-                            reach={1.8}
+                            reach={2.0}
                             spread={2.2}
                             bend={50}
                             glowSize={1.4}

@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import ApiKeyModal from '@/components/common/ApiKeyModal';
 import { getStoredApiKey, API_KEY_EVENT } from '@/lib/apiKey';
 import { ThinkingOrb } from 'thinking-orbs';
+import { VoiceBeam } from 'voice-glow';
 
 // Define the message structure
 type Message = {
@@ -293,9 +294,69 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
         }
     };
 
+    const meter = useRef(0.25);
+
+    useEffect(() => {
+        let animId: number;
+        let target = 0.35;
+        let lastTime = performance.now();
+        let nextBurstTime = lastTime + 500;
+
+        const animate = (time: number) => {
+            // Trigger random voice-like energy bursts at variable intervals
+            if (time >= nextBurstTime) {
+                const isSpike = Math.random() < 0.35;
+                target = isSpike
+                    ? 0.55 + Math.random() * 0.4   // Dynamic voice bursts (0.55 - 0.95)
+                    : 0.15 + Math.random() * 0.3;  // Gentle ambient presence (0.15 - 0.45)
+
+                nextBurstTime = time + 300 + Math.random() * 800;
+            }
+
+            const dt = Math.min((time - lastTime) / 1000, 0.1);
+            lastTime = time;
+
+            // Organic subtle oscillation
+            const oscillation = Math.sin(time * 0.0035) * 0.05 + Math.cos(time * 0.008) * 0.03;
+            const currentTarget = Math.max(0.05, Math.min(1, target + oscillation));
+
+            // Fast rise (attack) and gentle fall (release)
+            const speed = currentTarget > meter.current ? 7.0 : 3.0;
+            meter.current += (currentTarget - meter.current) * Math.min(1, dt * speed);
+            meter.current = Math.max(0, Math.min(1, meter.current));
+
+            animId = requestAnimationFrame(animate);
+        };
+
+        animId = requestAnimationFrame(animate);
+        return () => cancelAnimationFrame(animId);
+    }, []);
 
     return (
         <div className='relative w-full h-full max-w-4xl mx-auto px-2'>
+
+            {isLoading && messages.length === 2 && (
+                <div className="fixed top-0 right-0 w-full md:w-[calc(100%_-_254px)] pointer-events-none -z-10 overflow-hidden rotate-180">
+                    <VoiceBeam
+                        type="mobile"
+                        colorVariant="colorful"
+                        theme="auto"
+                        level={() => meter.current}
+                        scale={1.6}
+                        reach={1.8}
+                        spread={2.2}
+                        bend={50}
+                        glowSize={1.4}
+                        bloomHeight={1.4}
+                        flow={45}
+                        strength={0.9}
+                        className="w-full rounded-none!"
+                    >
+                        <div className="w-full h-[400px] md:h-[550px]" />
+                    </VoiceBeam>
+                </div>
+            )}
+
             <div ref={chatContainerRef} className="h-full pt-28 pb-56 max-h-dvh overflow-y-auto md:px-2">
                 {messages.length === 0 ? (
                     <div className="text-center text-gray-500 dark:text-gray-400 my-8">
@@ -325,40 +386,40 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                                                     transition={{ duration: 0.15, ease: "easeOut" }}
                                                 >
                                                     <div className='AI-message text-sm md:text-base space-y-6'>
-                                                    <ReactMarkdown
-                                                        remarkPlugins={[remarkMath]}
-                                                        rehypePlugins={[rehypeKatex]}
-                                                        components={{
-                                                            code({ node, className, children, ...props }) {
-                                                                const match = /language-(\w+)/.exec(className || "");
-                                                                return match ? (
-                                                                    <CodeBlock
-                                                                        language={match[1]}
-                                                                        value={String(children).trim()}
-                                                                    />
-                                                                ) : (
-                                                                    <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
-                                                                        {children}
-                                                                    </code>
-                                                                );
-                                                            },
-                                                            a: ({ node, ...props }) => (
-                                                                <Tooltip>
-                                                                    <TooltipTrigger> <a
-                                                                        className="hover:underline"
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        {...props}
-                                                                    /></TooltipTrigger>
-                                                                    <TooltipContent>
-                                                                        <p>Open Link</p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            ),
-                                                        }}
-                                                    >
-                                                        {message.text}
-                                                    </ReactMarkdown>
+                                                        <ReactMarkdown
+                                                            remarkPlugins={[remarkMath]}
+                                                            rehypePlugins={[rehypeKatex]}
+                                                            components={{
+                                                                code({ node, className, children, ...props }) {
+                                                                    const match = /language-(\w+)/.exec(className || "");
+                                                                    return match ? (
+                                                                        <CodeBlock
+                                                                            language={match[1]}
+                                                                            value={String(children).trim()}
+                                                                        />
+                                                                    ) : (
+                                                                        <code className={`bg-muted relative rounded-md px-[0.3rem] py-[0.1rem] ${className}`} {...props}>
+                                                                            {children}
+                                                                        </code>
+                                                                    );
+                                                                },
+                                                                a: ({ node, ...props }) => (
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger> <a
+                                                                            className="hover:underline"
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            {...props}
+                                                                        /></TooltipTrigger>
+                                                                        <TooltipContent>
+                                                                            <p>Open Link</p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                ),
+                                                            }}
+                                                        >
+                                                            {message.text}
+                                                        </ReactMarkdown>
                                                     </div>
                                                     {/* {streamingMessageId === message.id && (
                                                         <motion.span
