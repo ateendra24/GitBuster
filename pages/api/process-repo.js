@@ -47,6 +47,46 @@ export default async function handler(req, res) {
         }
     }
 
+    const isStream = req.query.stream === 'true'
+
+    if (isStream) {
+        try {
+            const backendRes = await axios.post(
+                `${process.env.BACKEND_URL}/process-repo/stream`,
+                req.body,
+                {
+                    responseType: 'stream',
+                    withCredentials: true,
+                    headers: {
+                        Cookie: req.headers.cookie || '',
+                        Accept: 'text/event-stream',
+                    },
+                }
+            )
+
+            const setCookie = backendRes.headers['set-cookie']
+            if (setCookie) {
+                res.setHeader('Set-Cookie', setCookie)
+            }
+
+            res.writeHead(200, {
+                'Content-Type': 'text/event-stream',
+                'Cache-Control': 'no-cache, no-transform',
+                'Connection': 'keep-alive',
+                'X-Accel-Buffering': 'no',
+            })
+
+            backendRes.data.pipe(res)
+            return
+        } catch (error) {
+            console.error('Error streaming repo processing:', error)
+            return res.status(error.response?.status || 500).json({
+                message: 'Error processing repository',
+                detail: error.response?.data?.detail || error.message,
+            })
+        }
+    }
+
     try {
         const backendRes = await axios.post(
             `${process.env.BACKEND_URL}/process-repo`,

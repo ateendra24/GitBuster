@@ -29,6 +29,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
     const url = `https://github.com/${username}/${repo}`;
     const [loading, setLoading] = useState(true);
     const [processed, setProcessed] = useState(false);
+    const [currentStep, setCurrentStep] = useState<number | undefined>(0);
     const [error, setError] = useState('');
     const [activeView, setActiveView] = useState<'Chat' | 'FolderStructure' | 'Details' | 'RepoVisualizer' | 'DependencyGraph'>('Chat');
     const [repoData, setRepoData] = useState<any>(null);
@@ -52,31 +53,102 @@ function Index({ username, repo }: { username: string, repo: string }) {
         setLoading(true);
         setError('');
         setIsRateLimited(false);
+        setCurrentStep(0);
+
         try {
             const customApiKey = getStoredApiKey();
-            const response = await axios.post(
-                `/api/process-repo`,
-                { url, custom_api_key: customApiKey || undefined },
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(customApiKey ? { 'x-custom-api-key': customApiKey } : {}),
-                    },
+            const response = await fetch(`/api/process-repo?stream=true`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(customApiKey ? { 'x-custom-api-key': customApiKey } : {}),
+                },
+                body: JSON.stringify({
+                    url,
+                    custom_api_key: customApiKey || undefined,
+                }),
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                const isLimit = response.status === 429 || errData?.isRateLimit;
+                if (isLimit) {
+                    setIsRateLimited(true);
                 }
-            );
-            if (response.status === 200) {
+                throw new Error(errData?.message || errData?.detail || 'Error processing repository');
+            }
+
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('text/event-stream') && response.body) {
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let finalData: any = null;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (!trimmed.startsWith('data:')) continue;
+                        const dataStr = trimmed.slice(5).trim();
+                        if (!dataStr) continue;
+
+                        try {
+                            const event = JSON.parse(dataStr);
+                            if (event.error) {
+                                if (event.status_code === 429 || event.isRateLimit) {
+                                    setIsRateLimited(true);
+                                }
+                                throw new Error(event.error);
+                            }
+
+                            if (typeof event.step === 'number') {
+                                setCurrentStep(event.step);
+                            }
+
+                            if (event.type === 'complete' || event.status === 'completed') {
+                                finalData = event;
+                                setCurrentStep(5);
+                            }
+                        } catch (pErr: any) {
+                            if (pErr.message && !pErr.message.includes('JSON')) {
+                                throw pErr;
+                            }
+                        }
+                    }
+                }
+
+                if (finalData) {
+                    setRepoData(finalData);
+                    // Brief pause to show the completed checklist
+                    await new Promise((resolve) => setTimeout(resolve, 800));
+                    setProcessed(true);
+                } else {
+                    throw new Error('Repository processing completed without returning data.');
+                }
+            } else {
+                // Fallback for standard JSON response
+                const data = await response.json();
+                setRepoData(data);
+                setCurrentStep(5);
+                await new Promise((resolve) => setTimeout(resolve, 500));
                 setProcessed(true);
-                setRepoData(response.data);
             }
         } catch (error: any) {
             console.error('Error processing repository:', error);
-            const isLimit = error?.response?.status === 429 || error?.response?.data?.isRateLimit;
+            const msg = error.message || 'Error processing repository';
+            const isLimit = msg.toLowerCase().includes('limit') || isRateLimitedRef.current;
             if (isLimit) {
                 setIsRateLimited(true);
             }
-            toast.error(error?.response?.data?.message || 'Error processing repository');
-            setError(error?.response?.data?.message || error?.response?.data?.detail || 'Error processing repository');
+            toast.error(msg);
+            setError(msg);
         } finally {
             setLoading(false);
         }
@@ -101,7 +173,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
 
     if (loading) {
         return (
-            <LoadingSection />
+            <LoadingSection currentStep={currentStep} loading={loading} />
         );
     }
 
