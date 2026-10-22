@@ -193,7 +193,7 @@ function Index({ username, repo }: { username: string, repo: string }) {
                         {/* <SideBarButtons /> */}
                         <RepoPageNavbar />
                         <section id='Chat' className={`h-full w-full ${activeView === 'Chat' ? 'block' : 'hidden'}`}>
-                            <Chat url={url} />
+                            <Chat url={url} sessionId={repoData?.session_id} />
                         </section>
                         <section id='FolderStructure' className={`h-full w-full max-w-7xl ${activeView === 'FolderStructure' ? 'block' : 'hidden'} `}>
                             <FolderStructure URL={url} />

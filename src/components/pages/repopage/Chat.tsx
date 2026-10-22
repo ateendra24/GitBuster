@@ -27,10 +27,12 @@ type Message = {
 };
 type ChatInterfaceProps = {
     url: string;
+    sessionId?: string;
 };
 
-const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
+const Chat: React.FC<ChatInterfaceProps> = ({ url, sessionId: initialSessionId }) => {
 
+    const [activeSessionId, setActiveSessionId] = useState<string | undefined>(initialSessionId);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -42,6 +44,12 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
     const abortControllerRef = useRef<AbortController | null>(null);
     const [apiKeyModalOpen, setApiKeyModalOpen] = useState(false);
     const [hasApiKey, setHasApiKey] = useState(false);
+
+    useEffect(() => {
+        if (initialSessionId) {
+            setActiveSessionId(initialSessionId);
+        }
+    }, [initialSessionId]);
 
     useEffect(() => {
         const updateKey = () => {
@@ -168,6 +176,7 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                 body: JSON.stringify({
                     message: userMessage.text,
                     chat_history: chatHistory,
+                    session_id: activeSessionId || initialSessionId || undefined,
                     custom_api_key: customApiKey || undefined,
                 }),
                 credentials: 'include',
@@ -211,6 +220,10 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url }) => {
                         }
 
                         if (data) {
+                            if (data.session_id) {
+                                setActiveSessionId(data.session_id);
+                            }
+
                             if (data.error) {
                                 if (data.error.includes('API Key') || data.error.includes('Quota') || data.error.includes('No API Key Provided')) {
                                     setApiKeyModalOpen(true);

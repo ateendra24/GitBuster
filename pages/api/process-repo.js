@@ -65,17 +65,17 @@ export default async function handler(req, res) {
             )
 
             const setCookie = backendRes.headers['set-cookie']
-            if (setCookie) {
-                res.setHeader('Set-Cookie', setCookie)
-            }
-
-            res.writeHead(200, {
+            const responseHeaders = {
                 'Content-Type': 'text/event-stream',
                 'Cache-Control': 'no-cache, no-transform',
                 'Connection': 'keep-alive',
                 'X-Accel-Buffering': 'no',
-            })
+            }
+            if (setCookie) {
+                responseHeaders['Set-Cookie'] = setCookie
+            }
 
+            res.writeHead(200, responseHeaders)
             backendRes.data.pipe(res)
             return
         } catch (error) {
