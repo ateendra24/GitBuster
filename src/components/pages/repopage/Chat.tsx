@@ -6,7 +6,8 @@ import 'katex/dist/katex.min.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import MessageWrapper from '@/components/Wrappers/MessageWrapper';
-import { ArrowUp, Check, Copy, Share2, Square, Key } from 'lucide-react';
+import { ArrowUp, Check, Copy, Share2, Square, Key, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { toast } from 'sonner';
 import QuickActions from '@/components/pages/repopage/QuickActions';
 import CodeBlock from '@/components/pages/repopage/CodeBlock';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,6 +25,9 @@ type Message = {
     id: number;
     sender: 'human' | 'ai';
     text: string;
+    traceId?: string;
+    observationId?: string;
+    feedback?: 'up' | 'down';
 };
 type ChatInterfaceProps = {
     url: string;
@@ -243,6 +247,18 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url, sessionId: initialSessionId }
                                 );
                             }
 
+                            if (data.trace_id || data.observation_id) {
+                                setMessages((prev) =>
+                                    prev.map((msg) =>
+                                        msg.id === aiMessageId ? {
+                                            ...msg,
+                                            traceId: data.trace_id || msg.traceId,
+                                            observationId: data.observation_id || msg.observationId,
+                                        } : msg
+                                    )
+                                );
+                            }
+
                             if (data.done) {
                                 break;
                             }
@@ -303,6 +319,29 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url, sessionId: initialSessionId }
             // User cancelled share or error
             if ((err as Error).name !== 'AbortError') {
                 console.error('Failed to share:', err);
+            }
+        }
+    };
+
+    const handleFeedback = async (messageId: number, traceId?: string, value: number = 1, observationId?: string) => {
+        setMessages((prev) =>
+            prev.map((m) => (m.id === messageId ? { ...m, feedback: value === 1 ? 'up' : 'down' } : m))
+        );
+        toast.success(value === 1 ? 'Thanks for the positive feedback!' : 'Feedback recorded. We will improve!');
+
+        if (traceId) {
+            try {
+                await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trace_id: traceId,
+                        observation_id: observationId,
+                        value,
+                    }),
+                });
+            } catch (err) {
+                console.warn('Failed to submit feedback telemetry:', err);
             }
         }
     };
@@ -442,18 +481,34 @@ const Chat: React.FC<ChatInterfaceProps> = ({ url, sessionId: initialSessionId }
                                                         />
                                                     )} */}
                                                     {streamingMessageId !== message.id && message.text && (
-                                                        <div className='flex items-center gap-1 mt-2'>
+                                                        <div className='flex items-center gap-1 mt-2 text-muted-foreground'>
                                                             <button
-                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
+                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer hover:text-foreground transition-colors'
+                                                                title="Copy message"
                                                                 onClick={() => handleCopy(message.id, message.text)}
                                                             >
                                                                 {copiedId === message.id ? <Check size={15} /> : <Copy size={15} />}
                                                             </button>
                                                             <button
-                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer'
+                                                                className='hover:bg-accent rounded-lg p-1.5 cursor-pointer hover:text-foreground transition-colors'
+                                                                title="Share response"
                                                                 onClick={() => handleShare(message.text)}
                                                             >
                                                                 <Share2 size={15} />
+                                                            </button>
+                                                            <button
+                                                                className={`hover:bg-accent rounded-lg p-1.5 cursor-pointer transition-colors ${message.feedback === 'up' ? 'text-green-500 hover:text-green-600' : 'hover:text-foreground'}`}
+                                                                title="Helpful response"
+                                                                onClick={() => handleFeedback(message.id, message.traceId, 1, message.observationId)}
+                                                            >
+                                                                <ThumbsUp size={15} />
+                                                            </button>
+                                                            <button
+                                                                className={`hover:bg-accent rounded-lg p-1.5 cursor-pointer transition-colors ${message.feedback === 'down' ? 'text-red-500 hover:text-red-600' : 'hover:text-foreground'}`}
+                                                                title="Needs improvement"
+                                                                onClick={() => handleFeedback(message.id, message.traceId, -1, message.observationId)}
+                                                            >
+                                                                <ThumbsDown size={15} />
                                                             </button>
                                                         </div>
                                                     )}
