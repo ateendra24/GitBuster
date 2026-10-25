@@ -124,13 +124,30 @@ function Index({ username, repo }: { username: string, repo: string }) {
                     }
                 }
 
+                // If any residual data remains in buffer after stream ends, parse it
+                if (!finalData && buffer.trim()) {
+                    const remainingLines = buffer.split('\n');
+                    for (const line of remainingLines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data:')) {
+                            try {
+                                const event = JSON.parse(trimmed.slice(5).trim());
+                                if (event.type === 'complete' || event.status === 'completed') {
+                                    finalData = event;
+                                    setCurrentStep(5);
+                                }
+                            } catch (_) {}
+                        }
+                    }
+                }
+
                 if (finalData) {
                     setRepoData(finalData);
                     // Brief pause to show the completed checklist
                     await new Promise((resolve) => setTimeout(resolve, 800));
                     setProcessed(true);
                 } else {
-                    throw new Error('Repository processing completed without returning data.');
+                    throw new Error('Repository processing connection was closed before completion. Please retry.');
                 }
             } else {
                 // Fallback for standard JSON response

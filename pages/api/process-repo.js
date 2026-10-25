@@ -10,6 +10,10 @@ const redis = new Redis({
 const MAX_REQUESTS = process.env.REPOPROCESS_MAX_REQUESTS // Max allowed per IP per day
 const WINDOW_SECONDS = 60 * 60 * 24 // 24 hours
 
+export const config = {
+    maxDuration: 60,
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Method not allowed' })
@@ -51,33 +55,54 @@ export default async function handler(req, res) {
 
     if (isStream) {
         try {
-            const backendRes = await axios.post(
+            res.setHeader('Content-Type', 'text/event-stream')
+            res.setHeader('Cache-Control', 'no-cache, no-transform')
+            res.setHeader('Connection', 'keep-alive')
+            res.setHeader('X-Accel-Buffering', 'no')
+
+            const backendRes = await fetch(
                 `${process.env.BACKEND_URL}/process-repo/stream`,
-                req.body,
                 {
-                    responseType: 'stream',
-                    withCredentials: true,
+                    method: 'POST',
                     headers: {
                         Cookie: req.headers.cookie || '',
+                        'Content-Type': 'application/json',
                         Accept: 'text/event-stream',
                     },
+                    body: JSON.stringify(req.body),
                 }
             )
 
-            const setCookie = backendRes.headers['set-cookie']
-            const responseHeaders = {
-                'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache, no-transform',
-                'Connection': 'keep-alive',
-                'X-Accel-Buffering': 'no',
-            }
-            if (setCookie) {
-                responseHeaders['Set-Cookie'] = setCookie
+            if (!backendRes.ok) {
+                const errorData = await backendRes.json().catch(() => ({}))
+                return res.status(backendRes.status).json({
+                    message: 'Error processing repository',
+                    detail: errorData.detail || 'Unknown error',
+                })
             }
 
-            res.writeHead(200, responseHeaders)
-            backendRes.data.pipe(res)
-            return
+            const setCookie = backendRes.headers.get('set-cookie')
+            if (setCookie) {
+                res.setHeader('Set-Cookie', setCookie)
+            }
+
+            if (!backendRes.body) {
+                return res.end()
+            }
+
+            const reader = backendRes.body.getReader()
+            const decoder = new TextDecoder()
+
+            while (true) {
+                const { done, value } = await reader.read()
+                if (done) break
+
+                const chunk = decoder.decode(value, { stream: true })
+                res.write(chunk)
+                if (res.flush) res.flush()
+            }
+
+            return res.end()
         } catch (error) {
             console.error('Error streaming repo processing:', error)
             return res.status(error.response?.status || 500).json({
