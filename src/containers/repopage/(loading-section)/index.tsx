@@ -7,7 +7,7 @@ export const REPO_LOADING_STATES: LoadingState[] = [
   { text: "Cloning repository from GitHub" },
   { text: "Scanning & filtering source files" },
   { text: "Chunking code & building index" },
-  { text: "Saving metadata to Redis cache" },
+  { text: "Saving metadata to cache" },
   { text: "Finalizing AI context & ready" },
 ];
 
